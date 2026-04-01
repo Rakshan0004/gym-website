@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPL FORGE — Push Pull Legs System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0f;
+    --surface: #0f1419;
+    --surface2: #161d26;
+    --border: #1e2a36;
+    --push: #e8521a;
+    --pull: #1a9be8;
+    --legs: #22c55e;
+    --text: #e8edf2;
+    --muted: #6b7f91;
+    --accent: #f5c842;
+    --card: #111820;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: 'PPL';
+    position: absolute;
+    right: -40px;
+    top: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px;
+    color: rgba(255,255,255,0.018);
+    pointer-events: none;
+    letter-spacing: 10px;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 120px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 40px;
+  }
+
+  .day-pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .pill.push { background: rgba(232,82,26,0.15); color: var(--push); border-color: rgba(232,82,26,0.3); }
+  .pill.pull { background: rgba(26,155,232,0.15); color: var(--pull); border-color: rgba(26,155,232,0.3); }
+  .pill.legs { background: rgba(34,197,94,0.15); color: var(--legs); border-color: rgba(34,197,94,0.3); }
+
+  .pill.active.push, .pill.push:hover { background: var(--push); color: #fff; border-color: var(--push); }
+  .pill.active.pull, .pill.pull:hover { background: var(--pull); color: #fff; border-color: var(--pull); }
+  .pill.active.legs, .pill.legs:hover { background: var(--legs); color: #000; border-color: var(--legs); }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 350px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-section { margin-bottom: 8px; }
+
+  .sidebar-day {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 8px 24px 6px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-day .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot.push { background: var(--push); }
+  .dot.pull { background: var(--pull); }
+  .dot.legs { background: var(--legs); }
+
+  .sidebar-muscle {
+    padding: 4px 24px 4px 36px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    margin-left: 22px;
+  }
+
+  .sidebar-muscle:hover { color: var(--text); }
+  .sidebar-muscle.active { color: var(--text); border-left-color: var(--accent); background: rgba(245,200,66,0.05); }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 48px;
+  }
+
+  /* DAY SECTION */
+  .day-section { display: none; }
+  .day-section.active { display: block; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .day-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    padding: 6px 16px;
+    border-radius: 3px;
+  }
+
+  .day-badge.push { background: rgba(232,82,26,0.15); color: var(--push); }
+  .day-badge.pull { background: rgba(26,155,232,0.15); color: var(--pull); }
+  .day-badge.legs { background: rgba(34,197,94,0.15); color: var(--legs); }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+
+  .day-meta {
+    margin-left: auto;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* MUSCLE GROUP */
+  .muscle-group { margin-bottom: 56px; }
+
+  .muscle-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .muscle-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .muscle-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .exercise-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* EXERCISE CARDS */
+  .exercises-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    gap: 20px;
+  }
+
+  .exercise-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .exercise-card:hover {
+    border-color: rgba(245,200,66,0.25);
+    transform: translateY(-1px);
+  }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .exercise-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .exercise-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .exercise-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .tag.equipment { border-color: rgba(245,200,66,0.3); color: var(--accent); background: rgba(245,200,66,0.05); }
+  .tag.compound { border-color: rgba(232,82,26,0.3); color: var(--push); background: rgba(232,82,26,0.05); }
+  .tag.isolation { border-color: rgba(26,155,232,0.3); color: var(--pull); background: rgba(26,155,232,0.05); }
+
+  .sets-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    text-align: center;
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+
+  .sets-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .sets-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .sets-rest {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-weight: 300;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* VISUAL FRAME */
+  .visual-frame {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .pose {
+    text-align: center;
+  }
+
+  .pose-icon {
+    width: 100%;
+    height: 72px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pose-icon svg { width: 44px; height: 44px; }
+
+  .pose-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .pose-desc {
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+
+  /* TABS */
+  .card-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    gap: 0;
+  }
+
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; padding: 20px 24px; }
+  .tab-content.active { display: block; }
+
+  /* CONTENT BLOCKS */
+  .steps-list {
+    counter-reset: step;
+    list-style: none;
+  }
+
+  .steps-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .steps-list li::before {
+    content: counter(step);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(245,200,66,0.1);
+    border: 1px solid rgba(245,200,66,0.2);
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .info-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+
+  .info-block-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .info-block-val {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .primary-muscle {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .mistakes-list {
+    list-style: none;
+  }
+
+  .mistakes-list li {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 9px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .mistakes-list li::before {
+    content: '⚠';
+    font-size: 12px;
+    color: #e85252;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tips-list {
+    list-style: none;
+  }
+
+  .tips-list li {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 9px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .tips-list li::before {
+    content: '◆';
+    font-size: 9px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .cue-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .cue {
+    background: rgba(245,200,66,0.07);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .breath-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+
+  .breath-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .breath-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 1px;
+  }
+
+  .breath-phase.inhale { background: rgba(26,155,232,0.15); color: var(--pull); }
+  .breath-phase.exhale { background: rgba(232,82,26,0.15); color: var(--push); }
+  .breath-phase.brace { background: rgba(34,197,94,0.15); color: var(--legs); }
+
+  .breath-text { font-size: 13px; line-height: 1.5; }
+
+  .progression-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .prog-level {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .prog-level-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .prog-level-name.beginner { color: var(--legs); }
+  .prog-level-name.intermediate { color: var(--accent); }
+  .prog-level-name.advanced { color: var(--push); }
+
+  .prog-weight {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  /* FEEL INDICATOR */
+  .feel-block {
+    background: linear-gradient(135deg, rgba(245,200,66,0.08), rgba(245,200,66,0.03));
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-top: 12px;
+  }
+
+  .feel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* TEMPO */
+  .tempo-display {
+    display: flex;
+    gap: 2px;
+    margin-top: 10px;
+    align-items: center;
+  }
+
+  .tempo-phase {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+
+  .tempo-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--accent);
+  }
+
+  .tempo-phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .tempo-dash { color: var(--border); font-size: 18px; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 24px; }
+    .exercises-grid { grid-template-columns: 1fr; }
+    .hero { padding: 48px 24px 40px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .progression-box { grid-template-columns: 1fr; }
+  }
+
+  /* animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .exercise-card { animation: fadeIn 0.3s ease both; }
+  .exercise-card:nth-child(2) { animation-delay: 0.05s; }
+  .exercise-card:nth-child(3) { animation-delay: 0.1s; }
+  .exercise-card:nth-child(4) { animation-delay: 0.15s; }
+  .exercise-card:nth-child(5) { animation-delay: 0.2s; }
+  .exercise-card:nth-child(6) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-tag">Science-Based Training System · v1.0</div>
+  <h1>FORGE<br><span>PPL</span></h1>
+  <p class="hero-sub">A research-backed Push–Pull–Legs system engineered for hypertrophy, strength, and long-term sustainability. Built by a top coach. Designed like a product.</p>
+  <div class="day-pills">
+    <button class="pill push active" onclick="showDay('push')">PUSH DAY</button>
+    <button class="pill pull" onclick="showDay('pull')">PULL DAY</button>
+    <button class="pill legs" onclick="showDay('legs')">LEGS DAY</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <!-- populated by JS -->
+  </nav>
+  <main class="main" id="main-content">
+    <!-- populated by JS -->
+  </main>
+</div>
+
+<footer>PPL FORGE SYSTEM · DESIGNED FOR ELITE-LEVEL TRAINING · SCIENCE-BACKED</footer>
+
+<script>
+const DATA = {
+  push: {
+    label: "PUSH DAY",
+    color: "push",
+    meta: "Chest · Shoulders · Triceps",
+    muscles: [
+      {
+        name: "CHEST",
+        exercises: [
+          {
+            num: "P-01",
+            name: "Barbell Bench Press",
+            type: "compound",
+            equipment: "Barbell",
+            sets: "4", reps: "6–10", rest: "2–3 min", tempo: ["3","0","1","1"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Lying flat on bench, feet planted flat on floor",
+            grip: "Pronated, slightly wider than shoulder-width",
+            spine: "Natural arch, shoulders retracted and depressed",
+            poses: [
+              { label: "START", desc: "Bar above chest, arms extended, retracted scaps" },
+              { label: "MID", desc: "Bar descends to lower chest, elbows ~75° out" },
+              { label: "END", desc: "Bar at chest, chest maximally stretched" }
+            ],
+            steps: [
+              "Set up with eyes directly under the bar",
+              "Grip bar slightly wider than shoulder-width",
+              "Retract scapulas — pull them together and down",
+              "Unrack bar and position above lower chest",
+              "Lower bar in a controlled arc to the lower chest",
+              "Touch lightly and press explosively back up",
+              "Keep wrists straight and locked throughout"
+            ],
+            primary: "Pectoralis Major (sternal head)",
+            secondary: "Anterior Deltoid, Triceps Brachii, Serratus Anterior",
+            feel: "Deep stretch across the chest at the bottom. Squeeze and contraction felt across the entire chest on the push. Forearms should drive the bar, not the wrists.",
+            inhale: "At the top before descent begins",
+            exhale: "Forcefully during the concentric press",
+            brace: "Brace abdominals hard at the top before lowering — creates a solid pressing platform",
+            mistakes: [
+              "Flaring elbows out to 90° — increases shoulder impingement risk",
+              "Bouncing the bar off the chest — removes time under tension",
+              "Letting the lower back excessively arch or hips rise off bench",
+              "Not retracting scapulas — reduces chest engagement and is unsafe"
+            ],
+            tips: [
+              "Cue: 'Bend the bar' — this activates the lats and keeps elbows stable",
+              "Drive feet into the floor to generate leg drive and full-body tension",
+              "For hypertrophy, control the eccentric (3 sec down) for max fiber damage",
+              "Touch the bar to the LOWER chest — this maximizes pec stretch"
+            ],
+            cues: ["Retract scapulas", "Bend the bar", "Drive through heels", "Chest to bar"],
+            progression: ["40–60 kg", "70–100 kg", "100–140+ kg"]
+          },
+          {
+            num: "P-02",
+            name: "Incline Dumbbell Press",
+            type: "compound",
+            equipment: "Dumbbell",
+            sets: "3", reps: "8–12", rest: "90 sec", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Incline bench at 30–45°, feet flat on floor",
+            grip: "Neutral-to-pronated, slightly wider than shoulders",
+            spine: "Neutral, shoulders back, upper chest tall",
+            poses: [
+              { label: "START", desc: "DBs at chest level, elbows bent ~90°, incline position" },
+              { label: "MID", desc: "DBs rising, controlled arc toward each other" },
+              { label: "END", desc: "Arms near full extension, inner DBs close, max upper chest squeeze" }
+            ],
+            steps: [
+              "Set bench to 30–45° (higher = more shoulder, lower = more chest)",
+              "Sit with dumbbells resting on thighs, then kick up and back as you lie down",
+              "Position dumbbells at chest level, elbows bent",
+              "Retract shoulder blades firmly into the bench",
+              "Press dumbbells up and slightly together in an arc",
+              "Pause briefly at the top with a strong upper-chest squeeze",
+              "Lower slowly and feel a full stretch in the upper chest"
+            ],
+            primary: "Upper Pectoralis Major (clavicular head)",
+            secondary: "Anterior Deltoid, Triceps, Serratus Anterior",
+            feel: "Stretch felt deep in the upper-inner chest at the bottom. Full squeeze across the upper pec at lockout. Shoulders should not be the dominant feeling.",
+            inhale: "At the top, before lowering",
+            exhale: "Throughout the press, forcefully",
+            brace: "Engage core to prevent lower back lifting off the pad",
+            mistakes: [
+              "Bench too steep (>45°) — shifts load from chest to front delts",
+              "Letting dumbbells drift too wide — reduces chest engagement",
+              "Not controlling the eccentric — missing time under tension",
+              "Dropping elbows too low — risk of shoulder impingement"
+            ],
+            tips: [
+              "30° incline activates upper chest optimally per EMG research",
+              "Let the dumbbells travel slightly inward at the top for a peak contraction",
+              "Slightly supinate (turn palms inward) at the top to increase squeeze",
+              "Increase stretch by letting elbows go slightly past the bench at the bottom"
+            ],
+            cues: ["Engage upper chest", "Squeeze at top", "Control the descent", "Neutral wrists"],
+            progression: ["10–16 kg each", "20–30 kg each", "32–44+ kg each"]
+          },
+          {
+            num: "P-03",
+            name: "Cable Chest Fly (Low to High)",
+            type: "isolation",
+            equipment: "Cable",
+            sets: "3", reps: "12–15", rest: "60 sec", tempo: ["2","1","1","0"],
+            tempoLabel: ["ECC","STRETCH","CON","RESET"],
+            position: "Standing, cables set at low position, slight forward lean",
+            grip: "Neutral, single handle each side",
+            spine: "Slight forward lean, chest tall, core braced",
+            poses: [
+              { label: "START", desc: "Arms wide at low cable position, slight bend in elbows" },
+              { label: "MID", desc: "Arms sweeping up and inward in a wide arc" },
+              { label: "END", desc: "Handles meet above chest height, maximum upper chest squeeze" }
+            ],
+            steps: [
+              "Set both cables to the lowest position",
+              "Stand in the center with one foot forward for stability",
+              "Grab handles with a slight bend in elbows (never straight)",
+              "Hinge slightly forward from the hips — chest proud",
+              "Arc handles upward and inward in a hugging motion",
+              "Squeeze your chest hard when handles meet at the top",
+              "Slowly lower back down, feeling the stretch throughout"
+            ],
+            primary: "Pectoralis Major (upper/sternal portion)",
+            secondary: "Anterior Deltoid, Biceps (stabilizer)",
+            feel: "Continuous tension throughout the full arc. Greatest stretch at the bottom, peak contraction at the top. This is a pure isolation movement — shoulders should be relaxed.",
+            inhale: "As you open arms wide at the bottom",
+            exhale: "As you bring arms together and squeeze",
+            brace: "Light core engagement — don't lean excessively",
+            mistakes: [
+              "Bending elbows too much — turns it into a press, not a fly",
+              "Using too much weight — causes form breakdown and shoulder recruitment",
+              "Not pausing at peak contraction — wastes the isolation benefit",
+              "Locking out elbows — puts unsafe stress on the elbow joint"
+            ],
+            tips: [
+              "Cables maintain constant tension unlike dumbbells — use this advantage",
+              "Slightly cross hands at the top for even better peak contraction",
+              "Think 'hugging a tree' — round arms, not straight",
+              "This is a finisher — do not chase heavy weight here"
+            ],
+            cues: ["Hug the tree", "Don't lock elbows", "Feel the stretch", "Squeeze at top"],
+            progression: ["7–12 kg per side", "15–20 kg per side", "22–28+ kg per side"]
+          }
+        ]
+      },
+      {
+        name: "SHOULDERS",
+        exercises: [
+          {
+            num: "P-04",
+            name: "Seated Dumbbell Overhead Press",
+            type: "compound",
+            equipment: "Dumbbell",
+            sets: "4", reps: "8–12", rest: "2 min", tempo: ["2","0","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Seated on upright bench (90° or slightly reclined), feet flat on floor",
+            grip: "Pronated, dumbbells at ear level",
+            spine: "Tall, neutral spine — avoid excessive lumbar arch",
+            poses: [
+              { label: "START", desc: "DBs at shoulder height, elbows bent at 90°, seated upright" },
+              { label: "MID", desc: "DBs rising, arms extending overhead" },
+              { label: "END", desc: "Arms near full extension, DBs close overhead, shoulder fully compressed" }
+            ],
+            steps: [
+              "Sit upright with back firmly against pad",
+              "Hold dumbbells at shoulder height, palms forward",
+              "Brace core and keep lower back neutral",
+              "Press dumbbells upward and slightly inward in an arc",
+              "Stop just short of lockout to maintain tension on delts",
+              "Lower slowly back to the starting position",
+              "Don't shrug — keep shoulders packed down throughout"
+            ],
+            primary: "Anterior and Lateral Deltoid",
+            secondary: "Upper Trapezius, Triceps Brachii, Serratus Anterior",
+            feel: "Burning pressure across the front and side of both shoulders throughout. Top of the arc: maximum compression in the deltoid. Bottom: full shoulder stretch.",
+            inhale: "Before pressing — at the bottom",
+            exhale: "Throughout the pressing movement",
+            brace: "Brace core firmly — prevents lower back compensation",
+            mistakes: [
+              "Excessive lumbar arch — shifts load to lower back",
+              "Shrugging at the top — traps overtake the movement",
+              "Locking elbows out — reduces delt tension",
+              "Going too wide — increases impingement risk"
+            ],
+            tips: [
+              "Neutral grip (palms facing each other) reduces shoulder impingement for many people",
+              "Stop just short of lockout — keeps constant tension on delts",
+              "Seated removes leg drive — forces pure shoulder work",
+              "Can perform unilaterally to address strength imbalances"
+            ],
+            cues: ["Pack shoulders down", "No shrug", "Drive straight up", "Engage core"],
+            progression: ["10–16 kg each", "18–26 kg each", "28–38+ kg each"]
+          },
+          {
+            num: "P-05",
+            name: "Lateral Raise (Cable or Dumbbell)",
+            type: "isolation",
+            equipment: "Dumbbell / Cable",
+            sets: "4", reps: "12–20", rest: "60 sec", tempo: ["2","1","1","0"],
+            tempoLabel: ["ECC","TOP","CON","RESET"],
+            position: "Standing, slight forward lean from hips (~15°), free hand bracing for support if cable",
+            grip: "Neutral, light weight",
+            spine: "Slight hip hinge, chest tall, core braced",
+            poses: [
+              { label: "START", desc: "Dumbbell at hip level, arm straight with soft elbow" },
+              { label: "MID", desc: "Arm raising laterally, elbow leading, pinky slightly higher than thumb" },
+              { label: "END", desc: "Arm at shoulder height (parallel to floor), brief pause" }
+            ],
+            steps: [
+              "Stand with slight forward lean (~15° from hips)",
+              "Hold dumbbell with a soft elbow bend (15–20°)",
+              "Initiate the lift by driving your elbow upward — NOT your hand",
+              "Raise arm to shoulder height — no higher",
+              "Keep pinky slightly higher than thumb (internal rotation)",
+              "Pause briefly at the top and feel the lateral delt fire",
+              "Lower under full control in 2 seconds"
+            ],
+            primary: "Lateral Deltoid (medial head)",
+            secondary: "Anterior Deltoid, Supraspinatus, Upper Trapezius",
+            feel: "Burning ache across the side of the shoulder. NOT in the traps — if traps are burning, you are shrugging or using too much weight. Side of delt should feel pumped.",
+            inhale: "At the bottom",
+            exhale: "As you raise the weight",
+            brace: "Light core — maintain posture throughout",
+            mistakes: [
+              "Shrugging — trap dominant, not delt dominant",
+              "Swinging with momentum — removes the isolation effect",
+              "Going above shoulder height — traps take over",
+              "Thumb higher than pinky — reduces lateral delt activation"
+            ],
+            tips: [
+              "Cable laterals maintain tension at the bottom — superior for hypertrophy",
+              "The slight forward lean targets the lateral delt peak",
+              "Lead with the elbow, not the hand — this cue changes everything",
+              "Use a weight where you can feel every rep — ego ruins this exercise"
+            ],
+            cues: ["Elbow leads the lift", "No shrug", "Pinky up", "Control the descent"],
+            progression: ["5–8 kg", "10–14 kg", "16–22+ kg"]
+          }
+        ]
+      },
+      {
+        name: "TRICEPS",
+        exercises: [
+          {
+            num: "P-06",
+            name: "Tricep Rope Pushdown",
+            type: "isolation",
+            equipment: "Cable",
+            sets: "3", reps: "12–15", rest: "60 sec", tempo: ["2","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Standing, facing cable machine, slight forward lean, elbows pinned to sides",
+            grip: "Neutral, rope attachment, each end in one hand",
+            spine: "Neutral, slight hinge at hips, core braced",
+            poses: [
+              { label: "START", desc: "Elbows at ~90°, rope at chest level, upper arms pinned to torso" },
+              { label: "MID", desc: "Arms extending downward, wrists beginning to flare out" },
+              { label: "END", desc: "Arms fully extended, rope ends flared wide, maximum tricep squeeze" }
+            ],
+            steps: [
+              "Stand facing cable with rope attached at upper pulley",
+              "Grip each end of rope with neutral grip",
+              "Pin elbows tightly to your sides — they must not move",
+              "Start with forearms at 90° — this is your starting position",
+              "Push down by extending the elbow only",
+              "At the bottom, flare the rope ends outward to split them apart",
+              "Squeeze the triceps hard at the bottom, then return slowly"
+            ],
+            primary: "Triceps Brachii (all 3 heads, emphasis lateral)",
+            secondary: "Anconeus",
+            feel: "Hard squeeze and contraction across the entire back of the upper arm at the bottom. Elbows should feel like the pivot point — nothing else should move.",
+            inhale: "At the top",
+            exhale: "As you push down and extend",
+            brace: "Core stays braced — avoid using the body to push weight",
+            mistakes: [
+              "Letting elbows flare out or move forward during the rep",
+              "Leaning too far forward and using body weight",
+              "Not flaring the rope at the bottom — reduces peak contraction",
+              "Using too much weight — causes elbows to wing out"
+            ],
+            tips: [
+              "Flaring the rope at the bottom adds 20–30% more tricep activation",
+              "Keep the rep slow — triceps respond very well to time under tension",
+              "Lean slightly forward from the hips to get a better line of pull",
+              "Superset with overhead extension to target all 3 heads in one session"
+            ],
+            cues: ["Pin elbows", "Flare at bottom", "Squeeze hard", "No body swing"],
+            progression: ["20–30 kg stack", "35–45 kg stack", "50–60+ kg stack"]
+          },
+          {
+            num: "P-07",
+            name: "Overhead Tricep Extension (EZ-Bar or Cable)",
+            type: "isolation",
+            equipment: "EZ-Bar / Cable",
+            sets: "3", reps: "10–14", rest: "75 sec", tempo: ["3","0","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Seated or standing, arms extended overhead, elbows pointing up",
+            grip: "Narrow, pronated (EZ-bar) or rope neutral grip",
+            spine: "Upright, chin slightly tucked, no excessive arching",
+            poses: [
+              { label: "START", desc: "Arms extended overhead, bar/rope behind head" },
+              { label: "MID", desc: "Elbows bending, bar/rope descending behind head" },
+              { label: "END", desc: "Elbows fully bent, maximum long-head stretch, forearms by ears" }
+            ],
+            steps: [
+              "Sit or stand with upright posture",
+              "Hold bar or cable rope overhead with narrow grip",
+              "Press arms fully extended overhead — this is the start",
+              "Keep upper arms stationary and elbows pointing forward",
+              "Slowly lower the weight behind your head by bending elbows",
+              "Feel the deep stretch in the triceps at the bottom",
+              "Drive back up to full extension, squeezing the triceps hard"
+            ],
+            primary: "Triceps Brachii Long Head (the largest head)",
+            secondary: "Medial and Lateral heads of Triceps",
+            feel: "Deep, intense stretch in the underside of the upper arm at the bottom. This is the ONLY exercise that fully stretches the long head of the triceps — you should feel it strongly.",
+            inhale: "At the top before lowering",
+            exhale: "As you extend back up",
+            brace: "Core tight — prevents excessive lumbar extension",
+            mistakes: [
+              "Letting elbows flare wide — takes load off the long head",
+              "Moving upper arms — only the forearm should move",
+              "Not getting the full stretch at the bottom — the whole point of this exercise",
+              "Arching the lower back excessively to compensate"
+            ],
+            tips: [
+              "The long head crosses the shoulder joint — this overhead position is critical",
+              "Research shows stretched-position overload (bottom of range) maximizes hypertrophy",
+              "Cable version maintains tension at full extension, unlike free weight",
+              "Pair with pushdown for a complete tricep pump — all 3 heads covered"
+            ],
+            cues: ["Elbows forward", "Feel the stretch", "Upper arms frozen", "Full extension"],
+            progression: ["10–18 kg", "20–30 kg", "32–44+ kg"]
+          }
+        ]
+      }
+    ]
+  },
+
+  pull: {
+    label: "PULL DAY",
+    color: "pull",
+    meta: "Back · Rear Delts · Biceps",
+    muscles: [
+      {
+        name: "BACK (LATS + THICKNESS)",
+        exercises: [
+          {
+            num: "L-01",
+            name: "Barbell Deadlift (Conventional)",
+            type: "compound",
+            equipment: "Barbell",
+            sets: "4", reps: "5–8", rest: "3 min", tempo: ["X","0","2","1"],
+            tempoLabel: ["CON","PAUSE","ECC","RESET"],
+            position: "Standing, hip-width stance, bar over mid-foot",
+            grip: "Double overhand or mixed, just outside shins",
+            spine: "Neutral — maintain throughout the entire lift",
+            poses: [
+              { label: "START", desc: "Hip hinge, chest up, bar touching shins, braced" },
+              { label: "MID", desc: "Bar passing knees, hips and shoulders rising together" },
+              { label: "END", desc: "Fully upright, hips locked out, glutes squeezed" }
+            ],
+            steps: [
+              "Stand with feet hip-width apart, bar over mid-foot",
+              "Hinge at hips and grip bar just outside your shins",
+              "Pull slack out of bar — create tension before the lift",
+              "Take a deep breath and brace your core maximally (Valsalva)",
+              "Drive feet through the floor to initiate the lift",
+              "Keep bar in contact with shins/thighs throughout",
+              "Lock out hips at the top — stand tall, glutes squeezed",
+              "Lower with control by pushing hips back first"
+            ],
+            primary: "Erector Spinae, Latissimus Dorsi, Glutes, Hamstrings",
+            secondary: "Trapezius, Rhomboids, Quadriceps, Forearms",
+            feel: "Full posterior chain activation — hamstrings, glutes, and lower back all working in unison. The lats should feel engaged (think: 'protect your armpits') throughout the lift.",
+            inhale: "Before the lift — bracing phase (Valsalva maneuver)",
+            exhale: "After locking out at the top",
+            brace: "Valsalva maneuver: breathe into the belly, hold hard, brace 360° around the spine — like you are about to take a punch",
+            mistakes: [
+              "Rounding the lower back — most dangerous error, risk of disc injury",
+              "Bar drifting away from body — creates massive mechanical disadvantage",
+              "Jerking the weight instead of pulling the slack out first",
+              "Hyperextending at lockout — squeezing glutes is sufficient"
+            ],
+            tips: [
+              "Think 'leg press the floor away' not 'pull the bar up' for better mechanics",
+              "Lat engagement cue: 'Protect your armpits' — keeps bar path tight",
+              "Engage lats before the pull — prevents the early rounding",
+              "Use a belt only at >85% of your max — learn to brace without it first"
+            ],
+            cues: ["Chest tall", "Protect your armpits", "Drive through the floor", "Glutes at lockout"],
+            progression: ["60–80 kg", "100–140 kg", "160–220+ kg"]
+          },
+          {
+            num: "L-02",
+            name: "Pull-Up / Lat Pulldown",
+            type: "compound",
+            equipment: "Bodyweight / Machine",
+            sets: "4", reps: "6–12", rest: "2 min", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Hanging from bar (pull-up) or seated (lat pulldown), fully extended arms overhead",
+            grip: "Slightly wider than shoulder-width, pronated (overhand)",
+            spine: "Slight arch in upper back, chest tall and proud",
+            poses: [
+              { label: "START", desc: "Full dead hang, arms extended, shoulders elevated and stretched" },
+              { label: "MID", desc: "Elbows driving down and back, bar near chin level" },
+              { label: "END", desc: "Chin over bar/bar to upper chest, lats fully contracted" }
+            ],
+            steps: [
+              "Grip the bar with hands slightly wider than shoulders",
+              "Start from a full dead hang — arms fully extended",
+              "Depress the scapulas first (pull shoulders down) before bending elbows",
+              "Drive elbows DOWN and BACK — think 'elbows to your back pockets'",
+              "Pull until chin clears the bar or chest meets the pulldown bar",
+              "Hold the top position for a 1-second squeeze",
+              "Lower slowly and completely to a full hang"
+            ],
+            primary: "Latissimus Dorsi",
+            secondary: "Biceps Brachii, Rear Deltoid, Rhomboids, Teres Major",
+            feel: "Full stretch in the lats at the bottom — almost like a wing-opening sensation. At the top: hard lat contraction at the side of the torso, just beneath the armpit.",
+            inhale: "At the bottom in the hanging position",
+            exhale: "As you pull up, forcefully",
+            brace: "Light core brace — prevents excessive swing or kipping",
+            mistakes: [
+              "Not achieving full range of motion (partial reps only)",
+              "Pulling with biceps instead of initiating with lats (scapular depression first)",
+              "Swinging or kipping — removes lat engagement",
+              "Looking down instead of slightly up — reduces thoracic extension"
+            ],
+            tips: [
+              "Depress scapulas FIRST before any elbow bending — this is the key to lat-dominant pull-ups",
+              "Imagine you are 'putting your shoulder blades in your back pockets'",
+              "Wide grip targets lats, neutral/narrow grip adds more bicep and lower lat",
+              "If doing pulldowns: never lean back too far — keep it under 30°"
+            ],
+            cues: ["Elbows to back pockets", "Scapulas down first", "Dead hang fully", "Chest to bar"],
+            progression: ["Banded assisted", "Bodyweight", "+10–30 kg weighted"]
+          },
+          {
+            num: "L-03",
+            name: "Seated Cable Row (V-Bar)",
+            type: "compound",
+            equipment: "Cable",
+            sets: "3", reps: "10–14", rest: "90 sec", tempo: ["2","1","2","0"],
+            tempoLabel: ["ECC","SQUEEZE","CON","RESET"],
+            position: "Seated on cable row machine, feet on pads, slight forward lean at start",
+            grip: "Neutral, V-bar attachment (parallel grip)",
+            spine: "Upright to slight lean back, not rounded",
+            poses: [
+              { label: "START", desc: "Arms extended, slight lean forward, shoulder blades protracted" },
+              { label: "MID", desc: "Row beginning, torso returning upright, elbows driving back" },
+              { label: "END", desc: "V-bar at abdomen, elbows past torso, full scap retraction" }
+            ],
+            steps: [
+              "Sit with feet on pads, knees slightly bent",
+              "Reach forward to grab the V-bar — full shoulder stretch",
+              "Begin with a slight forward lean to load the stretch",
+              "Initiate by retracting the scapulas — pull them together",
+              "Drive elbows straight back, keeping them close to torso",
+              "Pull the handle to your lower abdomen",
+              "Hold for 1 second, squeezing the mid-back hard",
+              "Slowly return to full arm extension, feeling the stretch"
+            ],
+            primary: "Rhomboids, Middle Trapezius, Teres Major",
+            secondary: "Latissimus Dorsi, Rear Deltoid, Biceps, Erector Spinae",
+            feel: "Full scapular stretch at the start — rhomboids and mid-traps stretching. Peak contraction: hard squeeze between the shoulder blades at the end of each rep.",
+            inhale: "At the stretch position (arms extended)",
+            exhale: "As you row and retract",
+            brace: "Moderate core brace — maintain upright posture, no excessive torso swing",
+            mistakes: [
+              "Using torso momentum to swing the weight back",
+              "Not retracting scapulas — missing the mid-back activation",
+              "Rowing to the chest instead of abdomen — changes muscle emphasis",
+              "Rounding the lower back in the starting position"
+            ],
+            tips: [
+              "The 1-second hold at the top is where back thickness is built — don't skip it",
+              "Slight forward lean at start allows extra stretch on the rhomboids",
+              "Keep elbows tight to body — wide elbows shift to rear delts",
+              "For a bigger contraction, try retracting before you even start rowing"
+            ],
+            cues: ["Scapulas retract", "Elbows to pockets", "Hold the squeeze", "Upright torso"],
+            progression: ["40–60 kg", "70–100 kg", "110–140+ kg"]
+          }
+        ]
+      },
+      {
+        name: "REAR DELTS",
+        exercises: [
+          {
+            num: "L-04",
+            name: "Face Pull (Cable Rope)",
+            type: "isolation",
+            equipment: "Cable",
+            sets: "3", reps: "15–20", rest: "60 sec", tempo: ["2","1","1","0"],
+            tempoLabel: ["ECC","SQUEEZE","CON","RESET"],
+            position: "Standing, facing cable set at forehead height, arms extended",
+            grip: "Neutral, rope attachment, elbows flared high",
+            spine: "Upright, slight hip hinge, stable base",
+            poses: [
+              { label: "START", desc: "Arms extended toward cable at forehead height" },
+              { label: "MID", desc: "Pulling rope toward face, elbows high and wide" },
+              { label: "END", desc: "Rope at face level, hands flanking head, elbows at 90°, external rotation" }
+            ],
+            steps: [
+              "Set cable at upper forehead or eye level",
+              "Attach rope and grip each end",
+              "Step back to create tension with arms fully extended",
+              "Pull the rope toward your face — elbows go HIGH and WIDE",
+              "As hands reach your face, externally rotate shoulders",
+              "End position: hands flanking your head, elbows out, like a double bicep pose",
+              "Squeeze rear delts hard, then extend back slowly"
+            ],
+            primary: "Rear Deltoid, External Rotators (Infraspinatus, Teres Minor)",
+            secondary: "Middle Trapezius, Rhomboids",
+            feel: "Hard squeeze directly in the rear of the shoulder at peak contraction. Combined with external rotation — the two most important movements for shoulder health and rear delt development.",
+            inhale: "Arms extended",
+            exhale: "As you pull toward face and externally rotate",
+            brace: "Light brace — stand tall, no leaning back",
+            mistakes: [
+              "Not externally rotating at the end — becomes a normal row",
+              "Cable set too low — changes mechanics, reduces rear delt involvement",
+              "Using too much weight — causes internal rotation and form breakdown",
+              "Elbows dropping — should stay at or above shoulder height"
+            ],
+            tips: [
+              "This is arguably the most important exercise for shoulder health and longevity",
+              "High rep ranges (15–25) work extremely well for rear delts",
+              "The external rotation component directly countreracts the internal rotation from bench press",
+              "Never skip this — it prevents injury AND builds the rear-delt cap"
+            ],
+            cues: ["Elbows high and wide", "Pull to face", "Rotate out", "Squeeze rear delts"],
+            progression: ["10–15 kg stack", "18–25 kg stack", "28–35+ kg stack"]
+          }
+        ]
+      },
+      {
+        name: "BICEPS",
+        exercises: [
+          {
+            num: "L-05",
+            name: "Barbell / EZ-Bar Curl",
+            type: "isolation",
+            equipment: "Barbell / EZ-Bar",
+            sets: "3", reps: "8–12", rest: "75 sec", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Standing, feet shoulder-width, bar hanging at thighs",
+            grip: "Supinated (palms up), shoulder-width apart",
+            spine: "Upright, shoulders back, core engaged",
+            poses: [
+              { label: "START", desc: "Bar at thigh level, arms extended, elbows in front of hips" },
+              { label: "MID", desc: "Bar rising, elbows staying fixed, biceps contracting" },
+              { label: "END", desc: "Bar near chest/chin, elbows forward, full bicep contraction" }
+            ],
+            steps: [
+              "Stand tall with bar held at thigh level, supinated grip",
+              "Brace core and keep upper arms pinned to your sides",
+              "Curl the bar upward by flexing the elbows — not swinging",
+              "As bar rises, allow elbows to travel slightly forward at the top",
+              "Squeeze the biceps hard at peak contraction",
+              "Lower the bar with full control for 3 seconds",
+              "Fully extend the arms at the bottom — full ROM"
+            ],
+            primary: "Biceps Brachii (both heads)",
+            secondary: "Brachialis, Brachioradialis, Forearm Flexors",
+            feel: "Hard peak squeeze at the top of the movement. Full stretch at the bottom with arms fully extended. The brachialis (under the bicep) should also burn on the eccentric.",
+            inhale: "At the bottom, arms extended",
+            exhale: "As you curl up",
+            brace: "Core stays braced to prevent lumbar hyperextension when lifting heavier loads",
+            mistakes: [
+              "Swinging the torso to cheat the weight up",
+              "Not fully extending the arms at the bottom — loses the stretch",
+              "Elbows drifting back behind the torso — reduces bicep tension",
+              "Going too heavy — turns it into a front delt exercise"
+            ],
+            tips: [
+              "Supinate the wrist MORE as the bar rises — this increases bicep peak contraction",
+              "The eccentric (lowering) is where most muscle damage and growth occurs — make it slow",
+              "EZ-bar reduces wrist strain — good option if wrists are sensitive",
+              "Lean very slightly forward at the start to increase the stretch stimulus"
+            ],
+            cues: ["Elbows fixed", "Squeeze at top", "Slow on the way down", "Full extension"],
+            progression: ["25–35 kg", "40–55 kg", "60–80+ kg"]
+          },
+          {
+            num: "L-06",
+            name: "Incline Dumbbell Curl",
+            type: "isolation",
+            equipment: "Dumbbell",
+            sets: "3", reps: "10–14", rest: "60 sec", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Seated on incline bench at 45–60°, arms hanging behind torso",
+            grip: "Supinated or hammer, one dumbbell each hand",
+            spine: "Leaned back on pad, head resting, chest tall",
+            poses: [
+              { label: "START", desc: "Arms hanging straight behind body on incline bench — maximum bicep stretch" },
+              { label: "MID", desc: "Curling up while maintaining incline position, elbows forward" },
+              { label: "END", desc: "Dumbbells at shoulder height, peak bicep contraction" }
+            ],
+            steps: [
+              "Set bench to 45–60° incline and sit back with head resting on pad",
+              "Let arms hang naturally — fully extended and behind the torso",
+              "This stretched position is the entire point of this exercise",
+              "Curl both dumbbells up simultaneously, keeping upper arms still",
+              "Squeeze hard at the top",
+              "Lower VERY slowly — 3 full seconds — to the stretch",
+              "Do not let momentum carry the weight at any point"
+            ],
+            primary: "Biceps Brachii Long Head (the peak builder)",
+            secondary: "Brachialis, Brachioradialis",
+            feel: "Intense, almost painful stretch in the bicep at the bottom. This stretched overload is what makes this exercise superior for building the long head and bicep peak. Research confirms stretched-position exercises drive maximum hypertrophy.",
+            inhale: "At the bottom in the stretch",
+            exhale: "As you curl up",
+            brace: "Keep body against the pad — no bouncing or momentum",
+            mistakes: [
+              "Bench not set at enough of an angle — loses the key stretch",
+              "Cutting the range of motion short — the bottom stretch is everything here",
+              "Using too much weight — prevents the slow eccentric that matters most",
+              "Elbows coming forward during the curl — reduces long head tension"
+            ],
+            tips: [
+              "Recent research shows incline curls produce superior long head hypertrophy vs standing",
+              "The 45° angle puts the bicep in its most stretched state under load",
+              "This is a finisher movement — light weight, full control, slow eccentric",
+              "Alternate arms (unilateral) to focus the mind-muscle connection even more"
+            ],
+            cues: ["Arms behind torso", "Slow eccentric", "Feel the stretch", "No momentum"],
+            progression: ["8–12 kg each", "14–18 kg each", "20–26+ kg each"]
+          }
+        ]
+      }
+    ]
+  },
+
+  legs: {
+    label: "LEGS DAY",
+    color: "legs",
+    meta: "Quads · Hamstrings · Glutes · Calves · Core",
+    muscles: [
+      {
+        name: "QUADS",
+        exercises: [
+          {
+            num: "G-01",
+            name: "Barbell Back Squat",
+            type: "compound",
+            equipment: "Barbell",
+            sets: "4", reps: "6–10", rest: "3 min", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Standing, bar on upper traps (high-bar) or rear delts (low-bar), feet shoulder-width",
+            grip: "Wide grip on bar for shoulder stability",
+            spine: "Neutral throughout — no butt wink or rounding",
+            poses: [
+              { label: "START", desc: "Upright stance, bar on traps, feet shoulder-width, toes out 15–30°" },
+              { label: "MID", desc: "Descending with knees tracking over toes, hips sinking below parallel" },
+              { label: "END", desc: "Hip crease below knee, full depth, knees out, chest up" }
+            ],
+            steps: [
+              "Set bar on upper traps, grip wide for stability",
+              "Step back with feet shoulder-width, toes at 15–30° angle",
+              "Take a deep breath and brace core hard (Valsalva)",
+              "Begin descent by pushing knees OUT and hips back simultaneously",
+              "Squat until hip crease is at or below knee level",
+              "Keep knees tracking over toes — never caving inward",
+              "Drive through the whole foot — heels, mid-foot — to stand",
+              "Lock out hips at the top, squeeze glutes"
+            ],
+            primary: "Quadriceps (Rectus Femoris, Vastus group)",
+            secondary: "Glutes, Hamstrings, Adductors, Erector Spinae, Core",
+            feel: "Quads burning throughout — especially on the descent. Glutes and hamstrings engage at the bottom. Drive from the floor should feel like the entire leg is a single powerful unit firing together.",
+            inhale: "At the top before descent — Valsalva",
+            exhale: "After passing the sticking point on the way up",
+            brace: "Maximum bracing — 360° around the spine. Breathe into your stomach, not your chest",
+            mistakes: [
+              "Knees caving inward — high ACL and knee injury risk",
+              "Heels rising off the floor — limited ankle mobility, add heel elevation temporarily",
+              "Rounding the lower back at the bottom ('butt wink') — spine in danger",
+              "Only doing partial reps — limits glute and quad activation"
+            ],
+            tips: [
+              "Full depth squats activate 25–40% more glute and quad muscle fiber than partials",
+              "Knees-out cue: imagine 'spreading the floor apart' with your feet",
+              "Core brace cue: 'Brace like someone is about to punch you in the stomach'",
+              "Elevate heels slightly if ankle mobility limits depth — use plates or squat shoes"
+            ],
+            cues: ["Knees out", "Chest up", "Drive through heels", "Full depth"],
+            progression: ["60–80 kg", "100–140 kg", "160–220+ kg"]
+          },
+          {
+            num: "G-02",
+            name: "Leg Press",
+            type: "compound",
+            equipment: "Machine",
+            sets: "3", reps: "10–15", rest: "90 sec", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","PAUSE","CON","RESET"],
+            position: "Seated in leg press machine, back flat against pad, feet shoulder-width on platform",
+            grip: "N/A — hands on handles for stability",
+            spine: "Flat against the pad — do not let lower back round off the pad",
+            poses: [
+              { label: "START", desc: "Legs extended (not locked), feet mid-height on platform" },
+              { label: "MID", desc: "Platform descending, knees bending, controlled descent" },
+              { label: "END", desc: "Knees at ~90°, thighs near chest, lower back flat on pad" }
+            ],
+            steps: [
+              "Set feet shoulder-width at mid-height on the platform",
+              "Unlock the safety handles and lower the platform slowly",
+              "Control the descent — do not let the weight crush you down",
+              "Lower until knees reach 90° or thighs are near your chest",
+              "Keep lower back FLAT against the pad — the moment it rounds, stop",
+              "Drive through the whole foot to push the platform back up",
+              "Stop just before full knee lockout to maintain quad tension"
+            ],
+            primary: "Quadriceps (all 4 heads)",
+            secondary: "Glutes, Hamstrings, Adductors",
+            feel: "Complete quad burn throughout the movement. Higher foot placement = more glutes. Lower placement = more quad focus. No knee pain should be felt — if so, reduce range of motion.",
+            inhale: "At the top before descent",
+            exhale: "As you drive the platform up",
+            brace: "Press lower back into the seat throughout",
+            mistakes: [
+              "Letting lower back lift off the pad — herniation risk",
+              "Locking knees out fully — joint stress with no additional muscle benefit",
+              "Feet too low on platform — excessive knee stress",
+              "Placing knees inward — especially with heavy loads"
+            ],
+            tips: [
+              "Foot placement is a powerful programming tool — change it weekly",
+              "Narrow, low placement = quad focus; Wide, high placement = glute/hamstring focus",
+              "Leg press allows very high volume — good for accumulating reps after squats",
+              "Do not ego-load here — this machine allows dangerously heavy loads"
+            ],
+            cues: ["Back flat", "Don't lock knees", "Drive through full foot", "Knees track toes"],
+            progression: ["80–120 kg", "140–200 kg", "220–320+ kg"]
+          }
+        ]
+      },
+      {
+        name: "HAMSTRINGS + GLUTES",
+        exercises: [
+          {
+            num: "G-03",
+            name: "Romanian Deadlift (RDL)",
+            type: "compound",
+            equipment: "Barbell / Dumbbell",
+            sets: "4", reps: "8–12", rest: "2 min", tempo: ["3","1","1","0"],
+            tempoLabel: ["ECC","STRETCH","CON","RESET"],
+            position: "Standing, hip-width stance, bar/dumbbells in front of thighs",
+            grip: "Pronated (overhand), shoulder-width",
+            spine: "Neutral throughout the ENTIRE movement — no rounding",
+            poses: [
+              { label: "START", desc: "Standing tall, bar at thigh level, soft knee bend" },
+              { label: "MID", desc: "Hip hinge in progress, bar sliding down thighs, back straight" },
+              { label: "END", desc: "Bar at shin level, maximum hamstring stretch, flat back" }
+            ],
+            steps: [
+              "Stand with bar at thigh level, slight bend in knees",
+              "Initiate by pushing hips BACK — not bending the knees",
+              "Slide the bar down your thighs as you hinge forward",
+              "Keep bar as close to your body as possible throughout",
+              "Lower until you feel a strong hamstring stretch (usually mid-shin)",
+              "Do not round the lower back — this is the critical error to avoid",
+              "Drive hips forward to return to standing — squeeze glutes at the top"
+            ],
+            primary: "Hamstrings (Biceps Femoris, Semimembranosus, Semitendinosus), Glutes",
+            secondary: "Erector Spinae, Adductors, Upper Glutes",
+            feel: "Intense hamstring stretch as you lower. The hamstrings should feel like they are being pulled to their limit at the bottom. At the top: glute squeeze and hip extension lockout.",
+            inhale: "At the standing position before the hinge",
+            exhale: "As you drive hips forward and stand up",
+            brace: "Maximum brace throughout — the spine is vulnerable in this hip-hinge position",
+            mistakes: [
+              "Rounding the lower back — the #1 injury risk, compresses lumbar discs",
+              "Bending the knees too much — turns it into a deadlift variation",
+              "Not pushing hips back far enough — loses the hamstring stretch",
+              "Bar drifting away from the body — exponentially increases spinal load"
+            ],
+            tips: [
+              "Think of your hips as a hinge, not a squat — knees barely move",
+              "Bar should drag across the shins and thighs — minimal distance from body",
+              "Go as low as your hamstring flexibility allows while keeping the back flat",
+              "This is one of the most effective hamstring builders — treat it as a primary lift"
+            ],
+            cues: ["Push hips back", "Bar hugs legs", "Flat back always", "Squeeze glutes at top"],
+            progression: ["40–60 kg", "70–100 kg", "110–150+ kg"]
+          },
+          {
+            num: "G-04",
+            name: "Hip Thrust (Barbell)",
+            type: "compound",
+            equipment: "Barbell",
+            sets: "4", reps: "8–15", rest: "90 sec", tempo: ["2","2","1","0"],
+            tempoLabel: ["ECC","SQUEEZE","CON","RESET"],
+            position: "Shoulders on bench, bar across hip crease, feet flat on floor",
+            grip: "Hands on bar for stability, elbows out",
+            spine: "Neutral at the top — no excessive lower back arch",
+            poses: [
+              { label: "START", desc: "Shoulders on bench edge, hips near floor, bar over hip crease" },
+              { label: "MID", desc: "Hips rising, glutes firing, lower back staying neutral" },
+              { label: "END", desc: "Hips fully extended, glutes maximally squeezed, body parallel to floor" }
+            ],
+            steps: [
+              "Set upper back against the side of a bench, knees bent",
+              "Roll a padded barbell over your thighs and rest it at the hip crease",
+              "Feet flat, shoulder-width, about 12–16 inches from glutes",
+              "Drive hips upward by squeezing the glutes hard",
+              "At the top: thighs should be parallel to the floor, shin vertical",
+              "Hold the top position for 2 seconds with a maximal glute squeeze",
+              "Lower under control to just above the floor, then repeat"
+            ],
+            primary: "Gluteus Maximus",
+            secondary: "Hamstrings, Adductors, Erector Spinae (stabilizers)",
+            feel: "Entire glute being squeezed like a fist at the top. The 2-second hold is critical — this is where the glute is working hardest. Hamstrings should be secondary, not primary.",
+            inhale: "At the bottom before the drive",
+            exhale: "As you thrust and squeeze at the top",
+            brace: "Tuck chin to chest at the top — prevents lumbar overextension",
+            mistakes: [
+              "Hyperextending the lower back at the top — lumbar, not glute dominant",
+              "Chin pointing up — causes lumbar compensation",
+              "Feet too far forward — hamstrings dominate instead of glutes",
+              "Rushing through reps — the pause is where glutes grow"
+            ],
+            tips: [
+              "Hip thrust produces the highest glute EMG activation of any exercise — the science is clear",
+              "Chin tuck at the top forces a neutral spine and better glute recruitment",
+              "Foot width changes the emphasis: narrower = upper glute, wider = lower glute",
+              "Pad the bar heavily — this position can be uncomfortable without it"
+            ],
+            cues: ["Chin tucked", "Squeeze 2 seconds", "Drive hips up", "Parallel at top"],
+            progression: ["40–80 kg", "90–130 kg", "140–200+ kg"]
+          }
+        ]
+      },
+      {
+        name: "CALVES",
+        exercises: [
+          {
+            num: "G-05",
+            name: "Standing Calf Raise",
+            type: "isolation",
+            equipment: "Machine / Smith Machine",
+            sets: "4", reps: "12–20", rest: "60 sec", tempo: ["2","2","2","0"],
+            tempoLabel: ["ECC","STRETCH","CON","RESET"],
+            position: "Standing, balls of feet on edge of platform, heels hanging off",
+            grip: "N/A — hands holding for balance",
+            spine: "Upright, core light brace",
+            poses: [
+              { label: "START", desc: "Heels dropped below platform level — maximum calf stretch" },
+              { label: "MID", desc: "Rising onto the balls of the feet" },
+              { label: "END", desc: "Maximum plantarflexion, heels as high as possible, peak calf contraction" }
+            ],
+            steps: [
+              "Position balls of feet on the edge of the platform, heels hanging",
+              "Start with heels as low as possible — feel the deep calf stretch",
+              "Rise UP as high as possible on your toes — maximum plantarflexion",
+              "Hold the TOP position for 2 full seconds",
+              "Lower slowly and fully to the stretched position — full range of motion",
+              "Do not bounce at the bottom — hold the stretch for 2 seconds too",
+              "Every rep = full stretch to full contraction"
+            ],
+            primary: "Gastrocnemius (the two-headed calf muscle)",
+            secondary: "Soleus",
+            feel: "Deep stretch at the bottom — almost uncomfortable. Hard squeeze across the entire calf at the top. Both the stretch and the contraction should be held and felt.",
+            inhale: "At the bottom in the stretch",
+            exhale: "As you rise and contract",
+            brace: "None required — focus on the calf, not posture",
+            mistakes: [
+              "Partial range of motion — only going halfway up or not going fully down",
+              "Bouncing at the bottom — eliminates stretch-induced tension",
+              "Going too fast — calves do not respond to speed, they respond to time under tension",
+              "Not holding the top — peak contraction is critical for this muscle"
+            ],
+            tips: [
+              "Calves are incredibly stubborn — full range of motion and high volume are essential",
+              "3-second down, 2-second hold at bottom, explode up, 2-second hold at top",
+              "Toes forward = overall calf. Toes out = inner calf. Toes in = outer calf",
+              "Seated calf raises target the Soleus (deeper calf) — add these too"
+            ],
+            cues: ["Full stretch down", "Hold at top", "No bouncing", "Maximum range"],
+            progression: ["Bodyweight", "40–80 kg", "100–160+ kg"]
+          }
+        ]
+      },
+      {
+        name: "CORE",
+        exercises: [
+          {
+            num: "G-06",
+            name: "Cable Crunch",
+            type: "isolation",
+            equipment: "Cable",
+            sets: "3", reps: "12–20", rest: "60 sec", tempo: ["1","1","2","0"],
+            tempoLabel: ["CON","SQUEEZE","ECC","RESET"],
+            position: "Kneeling on the floor facing a high cable pulley, hands holding rope at temples",
+            grip: "Neutral, rope attachment beside each temple",
+            spine: "Intentionally flexed — this IS the movement",
+            poses: [
+              { label: "START", desc: "Kneeling upright, rope at temples, hips fully extended" },
+              { label: "MID", desc: "Spinal flexion occurring, forehead driving toward knees" },
+              { label: "END", desc: "Fully crunched forward, forehead near knees, abs maximally contracted" }
+            ],
+            steps: [
+              "Kneel in front of a high cable with rope attached",
+              "Hold the rope ends beside your temples — NOT behind your head",
+              "Start with hips fully up and torso upright",
+              "Flex the spine forward by driving your FOREHEAD toward your knees",
+              "Do NOT move your hips — all movement is spinal flexion",
+              "Squeeze the abs hard at the fully flexed position for 1 second",
+              "Return to upright slowly and feel the stretch in the abs"
+            ],
+            primary: "Rectus Abdominis",
+            secondary: "External Obliques, Internal Obliques",
+            feel: "Entire front of the abdominal wall contracting from sternum to pelvis. Hard burning squeeze at the bottom. This should feel like your abs are being compressed as tightly as possible.",
+            inhale: "At the top in the upright position",
+            exhale: "As you crunch down forcefully",
+            brace: "The abs are the movement — no need for additional bracing",
+            mistakes: [
+              "Moving the hips instead of flexing the spine — turns it into a hip flexor exercise",
+              "Pulling with the arms — the rope is just a handle, not a lever",
+              "Not achieving full spinal flexion — half crunches, half benefit",
+              "Going too fast — abs need time under tension"
+            ],
+            tips: [
+              "Cable resistance provides constant tension — superior to floor crunches",
+              "Think 'bring rib cage to pelvis' — not 'head to floor'",
+              "Abs are a muscle like any other — they respond to progressive overload",
+              "Add weight progressively over weeks — treat this like any compound movement"
+            ],
+            cues: ["Spine flexion only", "Hips fixed", "Rib to pelvis", "Squeeze hard"],
+            progression: ["10–20 kg stack", "25–40 kg stack", "45–60+ kg stack"]
+          },
+          {
+            num: "G-07",
+            name: "Hanging Leg Raise",
+            type: "isolation",
+            equipment: "Pull-Up Bar",
+            sets: "3", reps: "10–15", rest: "75 sec", tempo: ["2","1","1","1"],
+            tempoLabel: ["ECC","PAUSE","CON","SQUEEZE"],
+            position: "Hanging from pull-up bar, arms fully extended, legs straight or slightly bent",
+            grip: "Pronated, shoulder-width",
+            spine: "Posterior tilt of pelvis is the key — the lumbar must round slightly",
+            poses: [
+              { label: "START", desc: "Dead hang, legs straight, hips in neutral position" },
+              { label: "MID", desc: "Legs rising, hips beginning to flex, abs contracting" },
+              { label: "END", desc: "Thighs at or above 90°, hips posteriorly tilted, ab peak squeeze" }
+            ],
+            steps: [
+              "Hang from a pull-up bar with arms fully extended",
+              "Begin by posteriorly tilting the pelvis — tuck the hips under",
+              "Raise legs together by flexing the hips, using abs NOT hip flexors",
+              "Bring thighs to at least parallel with the floor",
+              "For advanced: raise thighs above 90°, bringing knees toward chest",
+              "Hold the top for 1 second, squeezing the lower abs",
+              "Lower with full control — do not let them drop"
+            ],
+            primary: "Rectus Abdominis (lower portion), Hip Flexors",
+            secondary: "Obliques, Serratus Anterior, Grip Muscles",
+            feel: "Strong contraction in the lower abs when the posterior pelvic tilt is maintained. If only the hip flexors burn, the pelvis is not tilted. The key is the pelvic tilt — everything else follows.",
+            inhale: "At the bottom in the hang",
+            exhale: "As you raise your legs",
+            brace: "Posterior pelvic tilt IS the bracing mechanism here",
+            mistakes: [
+              "No posterior tilt — pure hip flexor exercise with minimal ab activation",
+              "Swinging with momentum — removes the control component",
+              "Only bringing legs to 90° without hip tilt — cuts off the movement prematurely",
+              "Letting legs drop without control on the eccentric"
+            ],
+            tips: [
+              "Pelvic tilt cue: 'Try to make your belly button touch your spine'",
+              "If you swing, pause at the bottom each rep to reset",
+              "Bent-knee version is the regression — straight leg is more challenging",
+              "Adding a dumbbell between the feet increases resistance significantly"
+            ],
+            cues: ["Tilt pelvis", "No swinging", "Lower abs fire", "Controlled descent"],
+            progression: ["Bent knee", "Straight leg", "+weight between feet"]
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// === POSE SVGs ===
+function poseSVG(exerciseNum, poseIndex) {
+  const colors = {
+    'P': '#e8521a', 'L': '#1a9be8', 'G': '#22c55e'
+  };
+  const color = colors[exerciseNum[0]] || '#f5c842';
+
+  const svgs = [
+    // start pose
+    `<svg viewBox="0 0 44 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="8" r="5" fill="${color}" opacity="0.85"/>
+      <rect x="17" y="14" width="10" height="20" rx="3" fill="${color}" opacity="0.6"/>
+      <rect x="7" y="16" width="8" height="14" rx="3" fill="${color}" opacity="0.5" transform="rotate(-10 11 23)"/>
+      <rect x="29" y="16" width="8" height="14" rx="3" fill="${color}" opacity="0.5" transform="rotate(10 33 23)"/>
+      <rect x="17" y="34" width="5" height="22" rx="2" fill="${color}" opacity="0.55"/>
+      <rect x="22" y="34" width="5" height="22" rx="2" fill="${color}" opacity="0.55"/>
+      <rect x="16" y="55" width="5" height="14" rx="2" fill="${color}" opacity="0.4"/>
+      <rect x="23" y="55" width="5" height="14" rx="2" fill="${color}" opacity="0.4"/>
+    </svg>`,
+    // mid pose
+    `<svg viewBox="0 0 44 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="10" r="5" fill="${color}" opacity="0.85"/>
+      <rect x="17" y="16" width="10" height="18" rx="3" fill="${color}" opacity="0.6" transform="rotate(8 22 25)"/>
+      <rect x="4" y="20" width="10" height="14" rx="3" fill="${color}" opacity="0.5" transform="rotate(-35 9 27)"/>
+      <rect x="30" y="20" width="10" height="14" rx="3" fill="${color}" opacity="0.5" transform="rotate(35 35 27)"/>
+      <rect x="16" y="33" width="5" height="18" rx="2" fill="${color}" opacity="0.55" transform="rotate(-5 18 42)"/>
+      <rect x="23" y="33" width="5" height="18" rx="2" fill="${color}" opacity="0.55" transform="rotate(5 25 42)"/>
+      <rect x="13" y="50" width="5" height="16" rx="2" fill="${color}" opacity="0.4" transform="rotate(-10 15 58)"/>
+      <rect x="25" y="50" width="5" height="16" rx="2" fill="${color}" opacity="0.4" transform="rotate(10 28 58)"/>
+    </svg>`,
+    // end pose
+    `<svg viewBox="0 0 44 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="7" r="5" fill="${color}" opacity="0.9"/>
+      <rect x="17" y="13" width="10" height="20" rx="3" fill="${color}" opacity="0.7"/>
+      <rect x="3" y="12" width="12" height="5" rx="2.5" fill="${color}" opacity="0.6"/>
+      <rect x="29" y="12" width="12" height="5" rx="2.5" fill="${color}" opacity="0.6"/>
+      <rect x="17" y="33" width="5" height="20" rx="2" fill="${color}" opacity="0.6"/>
+      <rect x="22" y="33" width="5" height="20" rx="2" fill="${color}" opacity="0.6"/>
+      <rect x="16" y="52" width="5" height="16" rx="2" fill="${color}" opacity="0.45"/>
+      <rect x="23" y="52" width="5" height="16" rx="2" fill="${color}" opacity="0.45"/>
+      <circle cx="22" cy="25" r="3" fill="${color}" opacity="0.4"/>
+    </svg>`
+  ];
+  return svgs[poseIndex] || svgs[0];
+}
+
+// === BUILD SIDEBAR ===
+function buildSidebar(dayKey) {
+  const day = DATA[dayKey];
+  let html = '';
+  day.muscles.forEach(m => {
+    html += `<div class="sidebar-section">
+      <div class="sidebar-day"><span class="dot ${day.color}"></span>${m.name}</div>`;
+    m.exercises.forEach(ex => {
+      html += `<div class="sidebar-muscle" onclick="scrollToExercise('${ex.num}')" id="side-${ex.num}">${ex.num} · ${ex.name}</div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+// === BUILD EXERCISE CARD ===
+function buildCard(ex, color) {
+  return `
+  <div class="exercise-card" id="card-${ex.num}">
+    <div class="card-header">
+      <div>
+        <div class="exercise-num">${ex.num}</div>
+        <div class="exercise-name">${ex.name}</div>
+        <div class="exercise-tags">
+          <span class="tag equipment">${ex.equipment}</span>
+          <span class="tag ${ex.type}">${ex.type.toUpperCase()}</span>
+          <span class="tag">${ex.position.split(',')[0]}</span>
+        </div>
+      </div>
+      <div class="sets-box">
+        <div class="sets-main">${ex.sets}×${ex.reps}</div>
+        <div class="sets-label">SETS × REPS</div>
+        <div class="sets-rest">${ex.rest} rest</div>
+      </div>
+    </div>
+
+    <div class="visual-frame">
+      ${ex.poses.map((p, i) => `
+        <div class="pose">
+          <div class="pose-icon">${poseSVG(ex.num, i)}</div>
+          <div class="pose-label">${p.label}</div>
+          <div class="pose-desc">${p.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card-tabs">
+      <button class="tab-btn active" onclick="switchTab(this, '${ex.num}', 'execution')">EXECUTION</button>
+      <button class="tab-btn" onclick="switchTab(this, '${ex.num}', 'muscles')">MUSCLES</button>
+      <button class="tab-btn" onclick="switchTab(this, '${ex.num}', 'breathing')">BREATHING</button>
+      <button class="tab-btn" onclick="switchTab(this, '${ex.num}', 'mistakes')">MISTAKES</button>
+      <button class="tab-btn" onclick="switchTab(this, '${ex.num}', 'tips')">PRO TIPS</button>
+    </div>
+
+    <div class="tab-content active" id="tab-${ex.num}-execution">
+      <ol class="steps-list">
+        ${ex.steps.map(s => `<li>${s}</li>`).join('')}
+      </ol>
+      <div class="info-grid" style="margin-top:14px">
+        <div class="info-block">
+          <div class="info-block-label">POSITION</div>
+          <div class="info-block-val">${ex.position}</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">GRIP / SETUP</div>
+          <div class="info-block-val">${ex.grip}</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">SPINE</div>
+          <div class="info-block-val">${ex.spine}</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">TEMPO</div>
+          <div class="info-block-val">
+            <div class="tempo-display">
+              ${ex.tempo.map((t, i) => `<div class="tempo-phase"><div class="tempo-num">${t}</div><div class="tempo-phase-label">${ex.tempoLabel[i]}</div></div>${i < ex.tempo.length - 1 ? '<span class="tempo-dash">—</span>' : ''}`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cue-row">
+        ${ex.cues.map(c => `<span class="cue">"${c}"</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-${ex.num}-muscles">
+      <div class="info-block" style="margin-bottom:12px">
+        <div class="info-block-label">PRIMARY TARGET</div>
+        <div class="info-block-val primary-muscle">${ex.primary}</div>
+      </div>
+      <div class="info-block" style="margin-bottom:14px">
+        <div class="info-block-label">SECONDARY / SYNERGISTS</div>
+        <div class="info-block-val">${ex.secondary}</div>
+      </div>
+      <div class="feel-block">
+        <div class="feel-label">WHERE TO FEEL IT</div>
+        ${ex.feel}
+      </div>
+      <div style="margin-top:14px">
+        <div class="info-block-label" style="margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted)">WEIGHT PROGRESSION</div>
+        <div class="progression-box">
+          <div class="prog-level">
+            <div class="prog-level-name beginner">BEGINNER</div>
+            <div class="prog-weight">${ex.progression[0]}</div>
+          </div>
+          <div class="prog-level">
+            <div class="prog-level-name intermediate">INTERMEDIATE</div>
+            <div class="prog-weight">${ex.progression[1]}</div>
+          </div>
+          <div class="prog-level">
+            <div class="prog-level-name advanced">ADVANCED</div>
+            <div class="prog-weight">${ex.progression[2]}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-${ex.num}-breathing">
+      <div class="breath-box">
+        <div class="breath-row">
+          <span class="breath-phase inhale">INHALE</span>
+          <span class="breath-text">${ex.inhale}</span>
+        </div>
+        <div class="breath-row">
+          <span class="breath-phase exhale">EXHALE</span>
+          <span class="breath-text">${ex.exhale}</span>
+        </div>
+        <div class="breath-row">
+          <span class="breath-phase brace">BRACE</span>
+          <span class="breath-text">${ex.brace}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-${ex.num}-mistakes">
+      <ul class="mistakes-list">
+        ${ex.mistakes.map(m => `<li>${m}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="tab-content" id="tab-${ex.num}-tips">
+      <ul class="tips-list">
+        ${ex.tips.map(t => `<li>${t}</li>`).join('')}
+      </ul>
+    </div>
+  </div>
+  `;
+}
+
+// === BUILD MAIN CONTENT ===
+function buildMain(dayKey) {
+  const day = DATA[dayKey];
+  let exerciseCounter = 0;
+  let html = `<div class="day-section active" id="day-${dayKey}">
+    <div class="day-header">
+      <span class="day-badge ${day.color}">${day.color.toUpperCase()}</span>
+      <div class="day-title">${day.label}</div>
+      <div class="day-meta">${day.meta}</div>
+    </div>`;
+
+  day.muscles.forEach(muscle => {
+    exerciseCounter += muscle.exercises.length;
+    html += `<div class="muscle-group" id="muscle-${dayKey}-${muscle.name.replace(/\s+/g, '')}">
+      <div class="muscle-header">
+        <div class="muscle-name">${muscle.name}</div>
+        <div class="muscle-line"></div>
+        <div class="exercise-count">${muscle.exercises.length} EXERCISE${muscle.exercises.length > 1 ? 'S' : ''}</div>
+      </div>
+      <div class="exercises-grid">
+        ${muscle.exercises.map(ex => buildCard(ex, day.color)).join('')}
+      </div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+// === SHOW DAY ===
+function showDay(dayKey) {
+  // Update pills
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.pill.${dayKey}`).classList.add('active');
+
+  // Build content
+  document.getElementById('main-content').innerHTML = buildMain(dayKey);
+  buildSidebar(dayKey);
+
+  // Scroll top
+  window.scrollTo({ top: document.querySelector('.layout').offsetTop - 20, behavior: 'smooth' });
+}
+
+function switchTab(btn, exerciseNum, tabName) {
+  const card = document.getElementById('card-' + exerciseNum);
+  card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab-${exerciseNum}-${tabName}`).classList.add('active');
+}
+
+function scrollToExercise(num) {
+  const el = document.getElementById('card-' + num);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.sidebar-muscle').forEach(s => s.classList.remove('active'));
+  const sideEl = document.getElementById('side-' + num);
+  if (sideEl) sideEl.classList.add('active');
+}
+
+// Init
+showDay('push');
+</script>
+</body>
+</html>
+```

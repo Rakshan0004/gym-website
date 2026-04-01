@@ -1,0 +1,14 @@
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel/
+
+# User
+.ipynb_checkpoints/
+*.log
