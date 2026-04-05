@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30-Day Skin & Hair Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF8F2;
+    --mon: #FF6B9D;
+    --tue: #FF9A3C;
+    --wed: #FFCF4B;
+    --thu: #4ECDC4;
+    --fri: #A78BFA;
+    --sat: #F472B6;
+    --sun: #34D399;
+    --dark: #1A1A2E;
+    --text: #2D2D2D;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–cream);
+font-family: ‘DM Sans’, sans-serif;
+color: var(–text);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* BG blobs */
+body::before {
+content: ‘’;
+position: fixed;
+top: -200px; right: -200px;
+width: 600px; height: 600px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(255,107,157,0.12), transparent 70%);
+pointer-events: none; z-index: 0;
+}
+body::after {
+content: ‘’;
+position: fixed;
+bottom: -200px; left: -200px;
+width: 600px; height: 600px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(78,205,196,0.12), transparent 70%);
+pointer-events: none; z-index: 0;
+}
+
+.wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* HEADER */
+.header {
+text-align: center;
+margin-bottom: 50px;
+animation: fadeDown 0.8s ease both;
+}
+.header .badge {
+display: inline-block;
+background: var(–dark);
+color: #fff;
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 3px;
+text-transform: uppercase;
+padding: 6px 18px;
+border-radius: 50px;
+margin-bottom: 18px;
+}
+.header h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2.4rem, 5vw, 4rem);
+font-weight: 900;
+line-height: 1.1;
+color: var(–dark);
+}
+.header h1 span {
+background: linear-gradient(135deg, #FF6B9D, #FF9A3C);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+.header p {
+margin-top: 12px;
+font-size: 1rem;
+color: #777;
+font-weight: 300;
+}
+
+/* DAY TABS */
+.day-tabs {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+justify-content: center;
+margin-bottom: 40px;
+animation: fadeUp 0.8s 0.2s ease both;
+}
+.day-tab {
+padding: 10px 22px;
+border-radius: 50px;
+border: 2px solid transparent;
+background: #fff;
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 600;
+font-size: 0.85rem;
+cursor: pointer;
+transition: all 0.25s ease;
+box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.day-tab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+.day-tab.active { color: #fff; border-color: transparent; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+
+.day-tab[data-day=“mon”] { color: var(–mon); }
+.day-tab[data-day=“tue”] { color: var(–tue); }
+.day-tab[data-day=“wed”] { color: var(–wed); }
+.day-tab[data-day=“thu”] { color: var(–thu); }
+.day-tab[data-day=“fri”] { color: var(–fri); }
+.day-tab[data-day=“sat”] { color: var(–sat); }
+.day-tab[data-day=“sun”] { color: var(–sun); }
+
+.day-tab[data-day=“mon”].active { background: var(–mon); }
+.day-tab[data-day=“tue”].active { background: var(–tue); }
+.day-tab[data-day=“wed”].active { background: var(–wed); }
+.day-tab[data-day=“thu”].active { background: var(–thu); }
+.day-tab[data-day=“fri”].active { background: var(–fri); }
+.day-tab[data-day=“sat”].active { background: var(–sat); }
+.day-tab[data-day=“sun”].active { background: var(–sun); }
+
+/* DAY PANEL */
+.day-panel { display: none; animation: panelIn 0.4s ease both; }
+.day-panel.active { display: block; }
+
+/* DAY HERO */
+.day-hero {
+border-radius: 24px;
+padding: 36px 40px;
+color: #fff;
+margin-bottom: 32px;
+position: relative;
+overflow: hidden;
+}
+.day-hero::before {
+content: attr(data-emoji);
+position: absolute;
+right: 30px; top: 50%;
+transform: translateY(-50%);
+font-size: 7rem;
+opacity: 0.2;
+line-height: 1;
+}
+.day-hero .day-label {
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 3px;
+text-transform: uppercase;
+opacity: 0.85;
+margin-bottom: 8px;
+}
+.day-hero h2 {
+font-family: ‘Playfair Display’, serif;
+font-size: 2.4rem;
+font-weight: 900;
+}
+.day-hero .tags {
+display: flex;
+gap: 10px;
+margin-top: 16px;
+flex-wrap: wrap;
+}
+.day-hero .tag {
+background: rgba(255,255,255,0.25);
+backdrop-filter: blur(4px);
+border-radius: 50px;
+padding: 5px 14px;
+font-size: 0.78rem;
+font-weight: 600;
+}
+
+[data-day=“mon”] .day-hero { background: linear-gradient(135deg, #FF6B9D, #FF8E53); }
+[data-day=“tue”] .day-hero { background: linear-gradient(135deg, #FF9A3C, #FFD93D); }
+[data-day=“wed”] .day-hero { background: linear-gradient(135deg, #FFCF4B, #FF9A3C); }
+[data-day=“thu”] .day-hero { background: linear-gradient(135deg, #4ECDC4, #44A8B3); }
+[data-day=“fri”] .day-hero { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+[data-day=“sat”] .day-hero { background: linear-gradient(135deg, #F472B6, #EC4899); }
+[data-day=“sun”] .day-hero { background: linear-gradient(135deg, #34D399, #059669); }
+
+/* TIMELINE */
+.timeline { display: flex; flex-direction: column; gap: 16px; }
+
+.time-block {
+background: #fff;
+border-radius: 20px;
+padding: 0;
+box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+overflow: hidden;
+transition: transform 0.2s, box-shadow 0.2s;
+}
+.time-block:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+
+.time-header {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 18px 24px;
+cursor: pointer;
+}
+.time-icon {
+width: 44px; height: 44px;
+border-radius: 14px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.3rem;
+flex-shrink: 0;
+}
+.time-info { flex: 1; }
+.time-label {
+font-size: 0.7rem;
+font-weight: 700;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: #aaa;
+margin-bottom: 2px;
+}
+.time-title {
+font-family: ‘Playfair Display’, serif;
+font-weight: 700;
+font-size: 1.05rem;
+color: var(–dark);
+}
+.time-arrow {
+font-size: 1rem;
+color: #ccc;
+transition: transform 0.3s;
+}
+.time-block.open .time-arrow { transform: rotate(180deg); }
+
+.time-body {
+display: none;
+padding: 0 24px 20px;
+border-top: 1px solid #f5f5f5;
+}
+.time-block.open .time-body { display: block; }
+
+.step-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.step-item {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+}
+.step-num {
+width: 26px; height: 26px;
+border-radius: 8px;
+font-size: 0.72rem;
+font-weight: 700;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0;
+color: #fff;
+margin-top: 1px;
+}
+.step-text {
+font-size: 0.92rem;
+line-height: 1.5;
+color: #444;
+}
+.step-text strong { color: var(–dark); font-weight: 600; }
+.step-note {
+font-size: 0.78rem;
+color: #999;
+font-style: italic;
+margin-top: 2px;
+}
+
+/* Special badge for optional */
+.optional-badge {
+display: inline-block;
+background: #F3F4F6;
+color: #9CA3AF;
+font-size: 0.68rem;
+font-weight: 700;
+padding: 2px 8px;
+border-radius: 50px;
+margin-left: 6px;
+vertical-align: middle;
+}
+.active-badge {
+display: inline-block;
+background: #DCFCE7;
+color: #16A34A;
+font-size: 0.68rem;
+font-weight: 700;
+padding: 2px 8px;
+border-radius: 50px;
+margin-left: 6px;
+vertical-align: middle;
+}
+
+/* TIPS CARD */
+.tips-card {
+background: var(–dark);
+color: #fff;
+border-radius: 20px;
+padding: 28px 30px;
+margin-top: 28px;
+}
+.tips-card h3 {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.1rem;
+margin-bottom: 16px;
+color: #FFD93D;
+}
+.tips-list { display: flex; flex-direction: column; gap: 10px; }
+.tip-item {
+display: flex; gap: 10px; align-items: flex-start;
+font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.8);
+}
+.tip-dot { color: #FFD93D; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* WEEK OVERVIEW */
+.week-overview {
+margin-top: 60px;
+animation: fadeUp 0.8s 0.4s ease both;
+}
+.week-overview h2 {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.8rem;
+text-align: center;
+margin-bottom: 30px;
+color: var(–dark);
+}
+.week-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+gap: 14px;
+}
+.week-card {
+border-radius: 20px;
+padding: 22px 16px;
+text-align: center;
+color: #fff;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+position: relative;
+overflow: hidden;
+}
+.week-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 30px rgba(0,0,0,0.18); }
+.week-card .wc-day { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; }
+.week-card .wc-name { font-family: ‘Playfair Display’, serif; font-size: 1.3rem; font-weight: 900; margin: 4px 0 12px; }
+.week-card .wc-pills { display: flex; flex-direction: column; gap: 5px; }
+.week-card .wc-pill {
+background: rgba(255,255,255,0.25);
+border-radius: 50px;
+padding: 4px 10px;
+font-size: 0.7rem;
+font-weight: 600;
+}
+
+.week-card[data-day=“mon”] { background: linear-gradient(160deg, #FF6B9D, #FF8E53); }
+.week-card[data-day=“tue”] { background: linear-gradient(160deg, #FF9A3C, #FFD93D); }
+.week-card[data-day=“wed”] { background: linear-gradient(160deg, #FFCF4B, #FF9A3C); }
+.week-card[data-day=“thu”] { background: linear-gradient(160deg, #4ECDC4, #44A8B3); }
+.week-card[data-day=“fri”] { background: linear-gradient(160deg, #A78BFA, #7C3AED); }
+.week-card[data-day=“sat”] { background: linear-gradient(160deg, #F472B6, #EC4899); }
+.week-card[data-day=“sun”] { background: linear-gradient(160deg, #34D399, #059669); }
+
+/* ANIMATIONS */
+@keyframes fadeDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+@keyframes panelIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+/* COLOR DOTS for step nums per day */
+[data-day=“mon”] .step-num { background: var(–mon); }
+[data-day=“tue”] .step-num { background: var(–tue); }
+[data-day=“wed”] .step-num { background: var(–wed); }
+[data-day=“thu”] .step-num { background: var(–thu); }
+[data-day=“fri”] .step-num { background: var(–fri); }
+[data-day=“sat”] .step-num { background: var(–sat); }
+[data-day=“sun”] .step-num { background: var(–sun); }
+
+[data-day=“mon”] .time-icon { background: rgba(255,107,157,0.12); }
+[data-day=“tue”] .time-icon { background: rgba(255,154,60,0.12); }
+[data-day=“wed”] .time-icon { background: rgba(255,207,75,0.12); }
+[data-day=“thu”] .time-icon { background: rgba(78,205,196,0.12); }
+[data-day=“fri”] .time-icon { background: rgba(167,139,250,0.12); }
+[data-day=“sat”] .time-icon { background: rgba(244,114,182,0.12); }
+[data-day=“sun”] .time-icon { background: rgba(52,211,153,0.12); }
+
+footer {
+text-align: center;
+margin-top: 60px;
+font-size: 0.78rem;
+color: #bbb;
+padding-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+.day-hero { padding: 28px 24px; }
+.day-hero h2 { font-size: 1.8rem; }
+.day-hero::before { font-size: 5rem; right: 16px; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <div class="badge">✨ Premium Wellness Plan</div>
+    <h1>30-Day <span>Skin & Hair</span><br>Routine</h1>
+    <p>Detan Control · Dandruff Defense · Daily Glow Protocol</p>
+  </div>
+
+  <!-- DAY TABS -->
+
+  <div class="day-tabs">
+    <button class="day-tab active" data-day="mon">Monday</button>
+    <button class="day-tab" data-day="tue">Tuesday</button>
+    <button class="day-tab" data-day="wed">Wednesday</button>
+    <button class="day-tab" data-day="thu">Thursday</button>
+    <button class="day-tab" data-day="fri">Friday</button>
+    <button class="day-tab" data-day="sat">Saturday</button>
+    <button class="day-tab" data-day="sun">Sunday</button>
+  </div>
+
+  <!-- ===== MONDAY ===== -->
+
+  <div class="day-panel active" data-day="mon">
+    <div class="day-hero" data-emoji="🌸">
+      <div class="day-label">Day 1 · Week Start</div>
+      <h2>Monday</h2>
+      <div class="tags">
+        <span class="tag">🧴 Shampoo Day</span>
+        <span class="tag">✨ Detan Day</span>
+        <span class="tag">💆 Full Routine</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena Ultra Sheer SPF 50+</strong><br><span class="step-note">Apply if going outside. Cover face, neck & hands.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🚿</div>
+          <div class="time-info"><div class="time-label">9:30 AM · Pre-Bath</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Ketoconazole 2% Shampoo</strong> — Apply on scalp<br><span class="step-note">Leave for 5 minutes before rinsing. No oil today.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM · Post-Bath</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong><br><span class="step-note">Gentle cleanse after shower.</span></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Minimalist Niacinamide 5% Serum</strong> — 2–3 drops<br><span class="step-note">Pat lightly on face. Don't rub.</span></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Pond's Super Light Gel Moisturizer</strong><br><span class="step-note">Light layer to lock in serum.</span></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Neutrogena SPF 50 Sunscreen</strong> — 2-finger rule<br><span class="step-note">Face + neck coverage mandatory.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply <strong>Neutrogena SPF 50</strong> on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong> — Himalaya Vitamin C</div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Curd + Besan Detan Pack</strong> — Apply evenly<br><span class="step-note">Leave for 20 minutes. Do NOT scrub — just rinse off gently.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> — Thin layer on face, neck & hands<br><span class="step-note">Night use ONLY. Use sparingly.</span></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text">⏱️ <strong>Wait 10 minutes</strong></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Moisturizer</strong> — Pond's Super Light Gel</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Monday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Ketoconazole shampoo must sit for 5 mins — don't rush the rinse.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Detan pack: No scrubbing, ever. Let it sit and rinse clean.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Glyco-6 is a chemical exfoliant — a thin layer is enough.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TUESDAY ===== -->
+
+  <div class="day-panel" data-day="tue">
+    <div class="day-hero" data-emoji="🌿">
+      <div class="day-label">Day 2</div>
+      <h2>Tuesday</h2>
+      <div class="tags">
+        <span class="tag">🥥 Oil Day</span>
+        <span class="tag">😌 Rest & Nourish</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena Ultra Sheer SPF 50+</strong><br><span class="step-note">Apply if going outside.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🥥</div>
+          <div class="time-info"><div class="time-label">9:30 AM · Pre-Bath</div><div class="time-title">Hair — Coconut Oil Treatment <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Coconut Oil</strong> — Massage into scalp<br><span class="step-note">Leave on for 30–45 minutes before bathing. No shampoo today.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM · Post-Bath</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Minimalist Niacinamide 5%</strong> — 2–3 drops</div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Pond's Super Light Gel</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Neutrogena SPF 50</strong> — 2-finger rule</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply <strong>SPF 50</strong> on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening Cleanse <span class="optional-badge">NO DETAN</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong> only — skip detan pack today</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> — Thin layer, face + neck + hands</div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text">⏱️ Wait <strong>10 minutes</strong></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Pond's Super Light Gel</strong> moisturizer</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Tuesday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Oil must stay 30–45 mins minimum for absorption — don't cut it short.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>No detan pack today — skin gets to breathe and recover.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WEDNESDAY ===== -->
+
+  <div class="day-panel" data-day="wed">
+    <div class="day-hero" data-emoji="✨">
+      <div class="day-label">Day 3 · Midweek Reset</div>
+      <h2>Wednesday</h2>
+      <div class="tags">
+        <span class="tag">🧴 Shampoo Day</span>
+        <span class="tag">✨ Detan Day</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena Ultra Sheer SPF 50+</strong> — if going outside</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🚿</div>
+          <div class="time-info"><div class="time-label">9:30 AM · Pre-Bath</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Ketoconazole 2% Shampoo</strong> — apply, wait 5 mins, rinse</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Niacinamide 5% Serum</strong> — 2–3 drops</div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Pond's Super Light Gel</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Neutrogena SPF 50</strong> — 2-finger rule</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply SPF on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Curd + Besan Detan Pack</strong> — 20 mins, no scrubbing</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> — Thin layer</div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text">⏱️ Wait 10 minutes</div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Moisturizer</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Wednesday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Same as Monday — Shampoo + Detan combo day. Stay consistent.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>The Niacinamide serum works best on slightly damp skin.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== THURSDAY ===== -->
+
+  <div class="day-panel" data-day="thu">
+    <div class="day-hero" data-emoji="🌱">
+      <div class="day-label">Day 4</div>
+      <h2>Thursday</h2>
+      <div class="tags">
+        <span class="tag">🥥 Oil Day</span>
+        <span class="tag">😌 Rest Day</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena SPF 50+</strong> if going outside</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🥥</div>
+          <div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil Treatment <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Coconut Oil</strong> — 30–45 mins on scalp</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Niacinamide Serum</strong></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Moisturizer</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Sunscreen SPF 50</strong></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply SPF on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening Cleanse <span class="optional-badge">NO DETAN</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong> only — no detan pack</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> + wait 10 mins + <strong>Moisturizer</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Thursday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Oil day — scalp needs this nutrition between shampoos.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Glyco-6 works overnight — don't skip even on rest days.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FRIDAY ===== -->
+
+  <div class="day-panel" data-day="fri">
+    <div class="day-hero" data-emoji="💜">
+      <div class="day-label">Day 5 · Complete Rest</div>
+      <h2>Friday</h2>
+      <div class="tags">
+        <span class="tag">😴 Full Rest Day</span>
+        <span class="tag">💆 Minimal Routine</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena SPF 50+</strong> if going outside</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🚿</div>
+          <div class="time-info"><div class="time-label">Pre-Bath</div><div class="time-title">Hair — Rest <span class="optional-badge">SKIP</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">—</span><div class="step-text">No oil, no shampoo today. Let scalp rest.</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">Post-Bath</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Niacinamide Serum</strong></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Moisturizer</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Sunscreen</strong></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply SPF 50 on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening Cleanse <span class="optional-badge">NO DETAN</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong> only</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> thin layer → 10 mins → <strong>Moisturizer</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Friday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Full rest day for hair. No oil, no shampoo — just let scalp breathe.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Skin still needs its AM + PM routine even on rest days.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SATURDAY ===== -->
+
+  <div class="day-panel" data-day="sat">
+    <div class="day-hero" data-emoji="🌺">
+      <div class="day-label">Day 6 · Weekend Power</div>
+      <h2>Saturday</h2>
+      <div class="tags">
+        <span class="tag">🧴 Shampoo Day</span>
+        <span class="tag">✨ Detan Day</span>
+        <span class="tag">💪 Full Routine</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena SPF 50+</strong> if going outside</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🚿</div>
+          <div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Ketoconazole 2% Shampoo</strong> — leave 5 mins, rinse</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Niacinamide 5% Serum</strong></div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Pond's Super Light Gel</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Neutrogena SPF 50</strong> — 2-finger rule</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply SPF on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Curd + Besan Pack</strong> — 20 mins, rinse gently</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> → 10 mins → <strong>Moisturizer</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Saturday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Weekend is the best day to do a thorough routine — take your time.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Detan pack works better on clean, freshly washed skin.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUNDAY ===== -->
+
+  <div class="day-panel" data-day="sun">
+    <div class="day-hero" data-emoji="🌻">
+      <div class="day-label">Day 7 · Recovery & Reset</div>
+      <h2>Sunday</h2>
+      <div class="tags">
+        <span class="tag">🥥 Oil Day</span>
+        <span class="tag">🌿 Deep Nourish</span>
+        <span class="tag">😌 No Detan</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="time-block open">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">☀️</div>
+          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Neutrogena SPF 50+</strong> if going outside</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🥥</div>
+          <div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil <span class="active-badge">ACTIVE</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Coconut Oil</strong> — Massage well, 30–45 mins<br><span class="step-note">Sunday is a great day to do a longer oil treatment if you have time.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">💧</div>
+          <div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Himalaya Vitamin C Face Wash</strong></div></li>
+            <li class="step-item"><span class="step-num">2</span><div class="step-text"><strong>Niacinamide Serum</strong> — 2–3 drops</div></li>
+            <li class="step-item"><span class="step-num">3</span><div class="step-text"><strong>Moisturizer</strong></div></li>
+            <li class="step-item"><span class="step-num">4</span><div class="step-text"><strong>Sunscreen SPF 50</strong></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌤️</div>
+          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text">Reapply SPF on face, neck & hands</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌅</div>
+          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening Cleanse <span class="optional-badge">NO DETAN</span></div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Face Wash</strong> only — skin rest before new week</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-header" onclick="toggle(this)">
+          <div class="time-icon">🌙</div>
+          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div>
+          <span class="time-arrow">▾</span>
+        </div>
+        <div class="time-body">
+          <ul class="step-list">
+            <li class="step-item"><span class="step-num">1</span><div class="step-text"><strong>Glyco-6</strong> → 10 mins → <strong>Moisturizer</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tips-card">
+      <h3>💡 Sunday Tips</h3>
+      <div class="tips-list">
+        <div class="tip-item"><span class="tip-dot">◆</span>Deep oil day — prep your scalp for the week ahead.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Monday starts fresh: shampoo + detan resumes tomorrow.</div>
+        <div class="tip-item"><span class="tip-dot">◆</span>Consistency over 30 days is what creates visible results.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK OVERVIEW -->
+
+  <div class="week-overview">
+    <h2>Weekly Overview</h2>
+    <div class="week-grid">
+      <div class="week-card" data-day="mon" onclick="switchDay('mon')">
+        <div class="wc-day">Day 1</div>
+        <div class="wc-name">MON</div>
+        <div class="wc-pills"><span class="wc-pill">🧴 Shampoo</span><span class="wc-pill">✨ Detan</span></div>
+      </div>
+      <div class="week-card" data-day="tue" onclick="switchDay('tue')">
+        <div class="wc-day">Day 2</div>
+        <div class="wc-name">TUE</div>
+        <div class="wc-pills"><span class="wc-pill">🥥 Oil</span></div>
+      </div>
+      <div class="week-card" data-day="wed" onclick="switchDay('wed')">
+        <div class="wc-day">Day 3</div>
+        <div class="wc-name">WED</div>
+        <div class="wc-pills"><span class="wc-pill">🧴 Shampoo</span><span class="wc-pill">✨ Detan</span></div>
+      </div>
+      <div class="week-card" data-day="thu" onclick="switchDay('thu')">
+        <div class="wc-day">Day 4</div>
+        <div class="wc-name">THU</div>
+        <div class="wc-pills"><span class="wc-pill">🥥 Oil</span></div>
+      </div>
+      <div class="week-card" data-day="fri" onclick="switchDay('fri')">
+        <div class="wc-day">Day 5</div>
+        <div class="wc-name">FRI</div>
+        <div class="wc-pills"><span class="wc-pill">😴 Rest</span></div>
+      </div>
+      <div class="week-card" data-day="sat" onclick="switchDay('sat')">
+        <div class="wc-day">Day 6</div>
+        <div class="wc-name">SAT</div>
+        <div class="wc-pills"><span class="wc-pill">🧴 Shampoo</span><span class="wc-pill">✨ Detan</span></div>
+      </div>
+      <div class="week-card" data-day="sun" onclick="switchDay('sun')">
+        <div class="wc-day">Day 7</div>
+        <div class="wc-name">SUN</div>
+        <div class="wc-pills"><span class="wc-pill">🥥 Oil</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Crafted with care · 30-Day Skin & Hair Transformation Plan</footer>
+
+<script>
+  function toggle(header) {
+    const block = header.parentElement;
+    block.classList.toggle('open');
+  }
+
+  function switchDay(day) {
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.day-tab[data-day="${day}"]`).classList.add('active');
+    document.querySelector(`.day-panel[data-day="${day}"]`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.day-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchDay(tab.dataset.day));
+  });
+
+  // Auto open first time-block per panel
+  document.querySelectorAll('.day-panel').forEach(panel => {
+    const first = panel.querySelector('.time-block');
+    if (first) first.classList.add('open');
+  });
+</script>
+
+</body>
+</html>
