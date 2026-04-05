@@ -740,10 +740,11 @@
   }
 
   #routine-container {
-    max-width: 1100px;
+    max-width: 1200px; /* Increased width for a more expansive feel */
     margin: 0 auto;
-    padding: 40px 20px 80px;
+    padding: 48px 24px 80px;
     display: none;
+    animation: fadeIn 0.4s ease-out;
   }
 
   .header-routine {
@@ -763,16 +764,16 @@
     margin-bottom: 18px;
   }
   .header-routine h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-family: 'Bebas Neue', sans-serif; /* Consistency with gym title */
+    font-size: clamp(2.4rem, 6vw, 5rem);
     font-weight: 900;
-    line-height: 1.1;
-    color: var(--routine-dark);
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: 2px;
   }
   .header-routine h1 span {
-    background: linear-gradient(135deg, #FF6B9D, #FF9A3C);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--accent);
+    -webkit-text-fill-color: var(--accent);
   }
   .header-routine p {
     margin-top: 12px;
@@ -820,16 +821,47 @@
   .day-tab[data-day="sat"].active { background: var(--sat); }
   .day-tab[data-day="sun"].active { background: var(--sun); }
 
-  .day-panel { display: none; }
-  .day-panel.active { display: block; }
+  .day-panel { 
+    display: none; 
+    position: relative; 
+    overflow: hidden; 
+    max-width: 100%; 
+    margin: 0 auto; 
+    background: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .day-panel.active { display: block; animation: routineFade 0.4s ease-out; }
+  
+  /* Ambient Glows per day */
+  .day-panel::before {
+    content: "";
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .day-panel[data-day="mon"]::before { background: var(--mon); }
+  .day-panel[data-day="tue"]::before { background: var(--tue); }
+  .day-panel[data-day="wed"]::before { background: var(--wed); }
+  .day-panel[data-day="thu"]::before { background: var(--thu); }
+  .day-panel[data-day="fri"]::before { background: var(--fri); }
+  .day-panel[data-day="sat"]::before { background: var(--sat); }
+  .day-panel[data-day="sun"]::before { background: var(--sun); }
 
-  .day-hero {
-    border-radius: 24px;
-    padding: 36px 40px;
-    color: #fff;
-    margin-bottom: 32px;
+  .day-hero { 
     position: relative;
-    overflow: hidden;
+    padding: 60px 40px; 
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    z-index: 1;
   }
   .day-hero::before {
     content: attr(data-emoji);
@@ -896,13 +928,17 @@
     padding: 18px 24px;
     cursor: pointer;
   }
-  .time-icon {
-    width: 44px; height: 44px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem;
-    flex-shrink: 0;
+  .time-icon { 
+    width: 48px; height: 48px; border-radius: 12px; 
+    background: rgba(255,255,255,0.03); 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 20px; border: 1px solid var(--border);
+    transition: all 0.3s;
   }
+  
+  .time-block.walk-bg .time-icon { background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.3); }
+
+  .time-header:hover .time-icon { background: rgba(255,255,255,0.08); border-color: var(--accent); transform: scale(1.05); }
   .time-info { flex: 1; }
   .time-label {
     font-size: 0.7rem;
@@ -1120,179 +1156,129 @@
   <!-- MONDAY -->
   <div class="day-panel active" data-day="mon">
     <div class="day-hero" data-emoji="🌸">
-      <div class="day-label">Day 1 · Week Start</div>
+      <div class="day-label">Day 1 · The Reset</div>
       <h2>Monday</h2>
-      <div class="tags">
-        <span class="routine-tag">🧴 Shampoo Day</span>
-        <span class="routine-tag">✨ Detan Day</span>
-        <span class="routine-tag">💆 Full Routine</span>
-      </div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Walk</span><span class="routine-tag">🧴 Shampoo</span><span class="routine-tag">✨ Chandan Day</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">☀️</div>
-          <div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Neutrogena Ultra Sheer SPF 50+</strong><br><span class="step-note-routine">Apply if going outside. Cover face, neck & hands.</span></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">🚿</div>
-          <div class="time-info"><div class="time-label">9:30 AM · Pre-Bath</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Ketoconazole 2% Shampoo</strong> — Apply on scalp<br><span class="step-note-routine">Leave for 5 minutes before rinsing. No oil today.</span></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">💧</div>
-          <div class="time-info"><div class="time-label">10:30 AM · Post-Bath</div><div class="time-title">Face Care Routine</div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Himalaya Vitamin C Face Wash</strong></div></li><li class="step-item-routine"><span class="step-num-routine">2</span><div class="step-text-routine"><strong>Minimalist Niacinamide 5% Serum</strong> — 2–3 drops</div></li><li class="step-item-routine"><span class="step-num-routine">3</span><div class="step-text-routine"><strong>Pond's Super Light Gel Moisturizer</strong></div></li><li class="step-item-routine"><span class="step-num-routine">4</span><div class="step-text-routine"><strong>Neutrogena SPF 50 Sunscreen</strong></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">🌤️</div>
-          <div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Reapply <strong>Neutrogena SPF 50</strong></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">🌅</div>
-          <div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash</strong></div></li><li class="step-item-routine"><span class="step-num-routine">2</span><div class="step-text-routine"><strong>Curd + Besan Detan Pack</strong> — 20 mins</div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)">
-          <div class="time-icon">🌙</div>
-          <div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery Routine</div></div>
-          <span class="time-arrow">▾</span>
-        </div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6</strong> — Thin layer</div></li><li class="step-item-routine"><span class="step-num-routine">2</span><div class="step-text-routine"><strong>Moisturizer</strong> — Pond's Gel</div></li></ul></div>
-      </div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚶</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Brisk Walk</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>30-Min Brisk Walk</strong> — Fresh air to start the week.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong> on face, neck & hands.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Ketoconazole Shampoo</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Keto Shampoo</strong> — leave for 5 mins, rinse well.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide Serum + Moisturizer + SPF 50</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Reapply <strong>SPF 50</strong> for continued protection.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Sandalwood Detan <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Sandalwood (Chandan) + Rose Water Pack</strong> — Apply for 20 mins. Wash with cool water.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Pond's Super Light Gel</strong></div></li></ul></div></div>
     </div>
-    <div class="tips-card-routine">
-      <h3>💡 Monday Tips</h3>
-      <div class="tips-list-routine">
-        <div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Ketoconazole shampoo: wait 5 mins.</div>
-        <div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Detan pack: No scrubbing.</div>
-      </div>
-    </div>
+    <div class="tips-card-routine"><h3>💡 Monday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Keto shampoo works best when allowed to sit for 5 full minutes.</div></div></div>
   </div>
 
-  <!-- Note: I will only include Monday for now to keep the file size manageable, but I'll add the logic to handle all days if they were present. Actually, the user wants me to copy and paste, so I should probably include all days. Since there are 7 days, I'll condense them slightly. -->
-  
+  <!-- TUESDAY -->
   <!-- TUESDAY -->
   <div class="day-panel" data-day="tue">
     <div class="day-hero" data-emoji="🌿">
-      <div class="day-label">Day 2</div>
+      <div class="day-label">Day 2 · Nourishment</div>
       <h2>Tuesday</h2>
-      <div class="tags"><span class="routine-tag">🥥 Oil Day</span><span class="routine-tag">😌 Rest & Nourish</span></div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Jog</span><span class="routine-tag">🥥 Oil Day</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open">
-        <div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div><span class="time-arrow">▾</span></div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Neutrogena SPF 50+</strong></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Coconut Oil</strong> — 30–45 mins</div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Serum + Moisturizer + SPF</strong></div></li></ul></div>
-      </div>
-      <div class="time-block">
-        <div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div>
-        <div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div>
-      </div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🏃</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Light Jog</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>20-Min Jog + Full Body Stretching</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong> application.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Virgin Coconut Oil</strong> — Deep scalp massage for 45 mins.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Refresh <strong>SPF 50</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
+    <div class="tips-card-routine"><h3>💡 Tuesday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Oil days are crucial for hair density in the 30-day program.</div></div></div>
   </div>
 
   <!-- WEDNESDAY -->
   <div class="day-panel" data-day="wed">
     <div class="day-hero" data-emoji="✨">
-      <div class="day-label">Day 3 · Midweek Reset</div>
+      <div class="day-label">Day 3 · Clarity</div>
       <h2>Wednesday</h2>
-      <div class="tags"><span class="routine-tag">🧴 Shampoo Day</span><span class="routine-tag">✨ Detan Day</span></div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Walk</span><span class="routine-tag">🚿 Shampoo</span><span class="routine-tag">🌿 Aloe Day</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Neutrogena Ultra Sheer SPF 50+</strong> — if going outside.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">9:30 AM · Pre-Bath</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Ketoconazole 2% Shampoo</strong> — apply, wait 5 mins, rinse.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide 5% Serum + Moisturizer + SPF 50</strong></div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Curd Besan Detan Pack</strong> (20 mins)</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6</strong> thin layer → 10 mins → <strong>Moisturizer</strong></div></li></ul></div></div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚶</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — 30-Min Walk</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Steady walk</strong> in nature. Focus on breathing.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Keto Shampoo</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Ketoconazole 2% Shampoo</strong> — apply, wait 5 mins, rinse.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Reapply <strong>SPF 50</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Aloe & Chandan Pack <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Fresh Aloe Vera Gel + Sandalwood Powder</strong>. No curd/milk.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
-    <div class="tips-card-routine"><h3>💡 Wednesday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Same as Monday — Shampoo + Detan combo day.</div><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Niacinamide works best on slightly damp skin.</div></div></div>
+    <div class="tips-card-routine"><h3>💡 Wednesday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Midweek is for resetting. Pure aloe vera gel is extremely cooling.</div></div></div>
   </div>
 
   <!-- THURSDAY -->
   <div class="day-panel" data-day="thu">
     <div class="day-hero" data-emoji="🌱">
-      <div class="day-label">Day 4</div>
+      <div class="day-label">Day 4 · Nutrition</div>
       <h2>Thursday</h2>
-      <div class="tags"><span class="routine-tag">🥥 Oil Day</span><span class="routine-tag">😌 Rest Day</span></div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Jog</span><span class="routine-tag">🥥 Oil Day</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Neutrogena SPF 50+</strong> if going outside.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Coconut Oil</strong> — 30–45 mins on scalp.</div></li></ul></div></div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🏃</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Light Jog</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>20-Min Jog + Full Stretch</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Virgin Coconut Oil</strong> — Scalp nutrition focused massage.</div></li></ul></div></div>
       <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6</strong> layer → 10 mins → <strong>Moisturizer</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Refresh <strong>SPF 50</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
-    <div class="tips-card-routine"><h3>💡 Thursday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Oil day — scalp needs nutrition between shampoos.</div><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Glyco-6 works overnight — don't skip.</div></div></div>
   </div>
 
   <!-- FRIDAY -->
+  <!-- FRIDAY -->
   <div class="day-panel" data-day="fri">
     <div class="day-hero" data-emoji="💜">
-      <div class="day-label">Day 5 · Complete Rest</div>
+      <div class="day-label">Day 5 · The Breath</div>
       <h2>Friday</h2>
-      <div class="tags"><span class="routine-tag">😴 Full Rest Day</span><span class="routine-tag">💆 Minimal Routine</span></div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Walk</span><span class="routine-tag">💆 Minimal Routine</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Morning Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong> if going outside.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">Pre-Bath</div><div class="time-title">Hair — Rest <span class="optional-badge">SKIP</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">—</span><div class="step-text-routine">No oil, no shampoo today. Let scalp breathe.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">Post-Bath</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Serum + Moisturizer + SPF</strong></div></li></ul></div></div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚶</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Long Walk</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>45-Min Brisk Walk</strong> — Gentle long-form movement.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Daily Face Care</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Reapply <strong>SPF 50</strong>.</div></li></ul></div></div>
       <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
   </div>
 
   <!-- SATURDAY -->
+  <!-- SATURDAY -->
   <div class="day-panel" data-day="sat">
     <div class="day-hero" data-emoji="🌺">
-      <div class="day-label">Day 6 · Weekend Power</div>
+      <div class="day-label">Day 6 · Transformation</div>
       <h2>Saturday</h2>
-      <div class="tags"><span class="routine-tag">🧴 Shampoo Day</span><span class="routine-tag">✨ Detan Day</span><span class="routine-tag">💪 Full Routine</span></div>
+      <div class="tags"><span class="routine-tag">🏃 6 AM Jog</span><span class="routine-tag">🧴 Shampoo</span><span class="routine-tag">✨ Glam Day</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Ketoconazole Shampoo <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Ketoconazole 2% Shampoo</strong> — leave 5 mins, rinse.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Detan Pack <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Curd Besan Detan Pack</strong> (20 mins)</div></li></ul></div></div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🏃</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Weekend Jog</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>40-Min Jog / Run</strong> — Boost cardiovascular endurance.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚿</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Keto Shampoo</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Ketoconazole 2% Shampoo</strong> — leave for 5 mins.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Daily Face Care</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Refresh <strong>SPF 50</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening — Sandalwood Glow Pack <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Sandalwood + Rose Water + Pinch of Turmeric</strong>. Cool wash. No curd.</div></li></ul></div></div>
       <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
   </div>
 
   <!-- SUNDAY -->
+  <!-- SUNDAY -->
   <div class="day-panel" data-day="sun">
     <div class="day-hero" data-emoji="🌻">
-      <div class="day-label">Day 7 · Recovery & Reset</div>
+      <div class="day-label">Day 7 · Soulful Recovery</div>
       <h2>Sunday</h2>
-      <div class="tags"><span class="routine-tag">🥥 Oil Day</span><span class="routine-tag">🌿 Deep Nourish</span><span class="routine-tag">😌 No Detan</span></div>
+      <div class="tags"><span class="routine-tag">🚶 6 AM Walk</span><span class="routine-tag">🥥 Deep Oil</span><span class="routine-tag">🌿 Reset</span></div>
     </div>
     <div class="timeline-routine">
-      <div class="time-block open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Coconut Oil Treatment <span class="active-badge">ACTIVE</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Coconut Oil</strong> — Massage scalp well, leave 45 mins.</div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Face Care Routine</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Serum + Moisturizer + SPF 50</strong></div></li></ul></div></div>
-      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌅</div><div class="time-info"><div class="time-label">6:30 PM</div><div class="time-title">Evening Cleanse <span class="optional-badge">NO DETAN</span></div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash</strong> only — skin rest before new week.</div></li></ul></div></div>
+      <div class="time-block walk-bg open"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🚶</div><div class="time-info"><div class="time-label">6:00 AM</div><div class="time-title">Morning Activation — Mindful Walk</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>45-Min Nature Walk</strong> — Meditative mental reset.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">☀️</div><div class="time-info"><div class="time-label">8:00 AM</div><div class="time-title">Sun Protection</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>SPF 50+</strong>.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🥥</div><div class="time-info"><div class="time-label">9:30 AM</div><div class="time-title">Hair — Deep Oil Treatment</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Virgin Coconut Oil</strong> — Therapeutic scalp & hair massage.</div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">💧</div><div class="time-info"><div class="time-label">10:30 AM</div><div class="time-title">Daily Face Care</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Face Wash + Niacinamide + Moisturizer + SPF 50</strong></div></li></ul></div></div>
+      <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌤️</div><div class="time-info"><div class="time-label">2:00 PM</div><div class="time-title">Sunscreen Reapplication</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine">Refresh <strong>SPF 50</strong>.</div></li></ul></div></div>
       <div class="time-block"><div class="time-header" onclick="toggleRoutine(this)"><div class="time-icon">🌙</div><div class="time-info"><div class="time-label">10:30 PM</div><div class="time-title">Night Recovery</div></div><span class="time-arrow">▾</span></div><div class="time-body"><ul class="step-list-routine"><li class="step-item-routine"><span class="step-num-routine">1</span><div class="step-text-routine"><strong>Glyco-6 + Moisturizer</strong></div></li></ul></div></div>
     </div>
-    <div class="tips-card-routine"><h3>💡 Sunday Tips</h3><div class="tips-list-routine"><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Deep oil day — prep for the week ahead.</div><div class="tip-item-routine"><span class="tip-dot-routine">◆</span>Reset skin for a fresh Monday start.</div></div></div>
   </div>
 
   <!-- WEEK OVERVIEW -->
