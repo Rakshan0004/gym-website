@@ -1332,10 +1332,11 @@
       <h3>⏰ Suggested iPhone Alarms</h3>
       <div class="alarm-grid">
         <div class="alarm-item"><span>06:00 AM</span> <strong>🌅 Morning Activation</strong></div>
-        <div class="alarm-item"><span>08:00 AM</span> <strong>🧴 Skincare & Serum</strong></div>
-        <div class="alarm-item"><span>07:00 PM</span> <strong>🏋️ Gym Session</strong></div>
-        <div class="alarm-item"><span>09:15 PM</span> <strong>⚖️ Weight Record</strong></div>
-        <div class="alarm-item"><span>10:30 PM</span> <strong>🌙 Night Recovery</strong></div>
+        <div class="alarm-item"><span>10:00 AM</span> <strong>🚿 Shampoo (Tugain)</strong></div>
+        <div class="alarm-item"><span>10:30 AM</span> <strong>🧴 Prime Skincare</strong></div>
+        <div class="alarm-item"><span>01:30 PM</span> <strong>🌤️ Office Freshness</strong></div>
+        <div class="alarm-item"><span>06:30 PM</span> <strong>🧼 Pre-Gym Prep</strong></div>
+        <div class="alarm-item"><span>09:15 PM</span> <strong>⚖️ Weight & Bath</strong></div>
       </div>
     </div>
   </div>
@@ -2726,59 +2727,67 @@ const SB_KEY = 'sb_publishable_5HL-A35l06j1X3ygFBVL0w_TDcv9Ktv';
 const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
 const ROUTINE_DATA = {
-  mon: { emoji: '🌸', tag: 'Day 1 · The Reset', gym: 'push', items: [
-    { id: 'm1', time: '06:00 AM', icon: '🚶', title: 'Morning Activation', desc: '30-Min Brisk Walk + Fresh Air' },
-    { id: 'm2', time: '08:00 AM', icon: '🧴', title: 'Skincare Step 1', desc: 'Himalaya Vitamin C Wash + Minimalist Niacinamide' },
-    { id: 'm3', time: '08:15 AM', icon: '💧', title: 'Skincare Step 2', desc: 'Pond\'s Super Light Gel + Neutrogena SPF 50+' },
-    { id: 'm4', time: '09:30 AM', icon: '🚿', title: 'Hair Control', desc: 'Tugain 2% Keto Shampoo (Leave 5 mins)' },
-    { id: 'm5', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PUSH DAY (Chest/Shoulder/Triceps)', type: 'gym' },
-    { id: 'm6', time: '09:15 PM', icon: '⚖️', title: 'Post-Gym Weight', desc: 'Bathe + Record Live Weight', type: 'weight' },
-    { id: 'm7', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Pond\'s Super Light Gel' }
+  mon: { emoji: '🌸', tag: 'Monday · The Reset', gym: 'push', items: [
+    { id: 'm1', time: '06:00 AM', icon: '🚶', title: 'Morning Activation', desc: 'Brisk Walk + Cooking' },
+    { id: 'm2', time: '10:00 AM', icon: '🚿', title: 'Hair Control', desc: 'Tugain 2% Shampoo (Wait 5 mins)' },
+    { id: 'm3', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Post-Bath: Himalaya Wash -> Niacinamide -> Pond\'s -> SPF' },
+    { id: 'm4', time: '01:30 PM', icon: '🌤️', title: 'Office SPF Refresh', desc: 'Himalaya Wash (Quick) + Neutrogena SPF' },
+    { id: 'm5', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym Prep', desc: 'Himalaya Wash (Oil Removal)' },
+    { id: 'm6', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PUSH DAY (Chest/Shoulder/Triceps)', type: 'gym' },
+    { id: 'm7', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Record weight after post-gym bath', type: 'weight' },
+    { id: 'm8', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Dinner + Pond\'s Super Light Gel' }
   ]},
-  tue: { emoji: '🌿', tag: 'Day 2 · Nourish', gym: 'pull', items: [
-    { id: 't1', time: '06:00 AM', icon: '🏃', title: 'Morning Activation', desc: '20-Min Jog + Stretching' },
-    { id: 't2', time: '08:00 AM', icon: '🧴', title: 'Morning Glow', desc: 'Himalaya Wash + Minimalist Niacinamide + Ponds + SPF' },
-    { id: 't3', time: '09:30 AM', icon: '🥥', title: 'Hair Nutrition', desc: 'Virgin Coconut Oil Deep Massage (45 mins)' },
-    { id: 't4', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PULL DAY (Back/Rear Delts/Biceps)', type: 'gym' },
-    { id: 't5', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Record live weight after bath', type: 'weight' },
-    { id: 't6', time: '10:30 PM', icon: '🌙', title: 'Night Peel', desc: 'Glyco-6 (Thin layer) + Ponds Gel' }
+  tue: { emoji: '🌿', tag: 'Tuesday · Nourish', gym: 'pull', items: [
+    { id: 't1', time: '06:00 AM', icon: '🏃', title: 'Morning Activation', desc: '20-Min Jog + Cooking' },
+    { id: 't2', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Post-Bath: Himalaya Wash -> Niacinamide -> Pond\'s -> SPF' },
+    { id: 't3', time: '01:30 PM', icon: '🌤️', title: 'Office Refresh', desc: 'Quick Face Wash + Neutrogena SPF' },
+    { id: 't4', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym Prep', desc: 'Himalaya Face Wash' },
+    { id: 't5', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PULL DAY (Back/Rear Delts/Biceps)', type: 'gym' },
+    { id: 't6', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Record live weight after bath', type: 'weight' },
+    { id: 't7', time: '10:30 PM', icon: '🌙', title: 'Night Peel', desc: 'Glyco-6 (Thin Layer) + Ponds Gel' }
   ]},
-  wed: { emoji: '✨', tag: 'Day 3 · Clarity', gym: 'legs', items: [
-    { id: 'w1', time: '06:00 AM', icon: '🚶', title: 'Mindful Walk', desc: '30-Min Walk in Nature' },
-    { id: 'w2', time: '08:00 AM', icon: '🧴', title: 'Morning Glow', desc: 'Himalaya Wash + Minimalist Niacinamide + Ponds + SPF' },
-    { id: 'w3', time: '09:30 AM', icon: '🚿', title: 'Hair Defense', desc: 'Tugain 2% Keto Shampoo' },
-    { id: 'w4', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'LEGS DAY (Quads/Hams/Calves/Core)', type: 'gym' },
-    { id: 'w5', time: '09:15 PM', icon: '⚖️', title: 'Weight Record', desc: 'Mark live weight in tracker', type: 'weight' },
-    { id: 'w6', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Pond\'s Super Light Gel' }
+  wed: { emoji: '✨', tag: 'Wednesday · Clarity', gym: 'legs', items: [
+    { id: 'w1', time: '06:00 AM', icon: '🚶', title: 'Mindful Walk', desc: '30-Min Walk + Cooking' },
+    { id: 'w2', time: '10:00 AM', icon: '🚿', title: 'Hair Rescue', desc: 'Tugain 2% Shampoo' },
+    { id: 'w3', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Post-Bath: Himalaya Wash -> Niacinamide -> Pond\'s -> SPF' },
+    { id: 'w4', time: '01:30 PM', icon: '🌤️', title: 'Office Refresh', desc: 'SPF Re-application' },
+    { id: 'w5', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym Wash', desc: 'Cleanse before heavy sweat' },
+    { id: 'w6', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'LEGS DAY (Full Body Base)', type: 'gym' },
+    { id: 'w7', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Mark live weight in tracker', type: 'weight' },
+    { id: 'w8', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Dinner + Pond\'s Super Light Gel' }
   ]},
-  thu: { emoji: '🌱', tag: 'Day 4 · Growth', gym: 'push', items: [
-    { id: 'th1', time: '06:00 AM', icon: '🏃', title: 'Morning Cardio', desc: '20-Min Jog' },
-    { id: 'th2', time: '08:00 AM', icon: '🧴', title: 'Morning Glow', desc: 'Himalaya Wash + Minimalist Niacinamide + Ponds + SPF' },
-    { id: 'th3', time: '09:30 AM', icon: '🥥', title: 'Hair Care', desc: 'Coconut Oil Treatment' },
-    { id: 'th4', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PUSH DAY (Volume Focus)', type: 'gym' },
-    { id: 'th5', time: '09:15 PM', icon: '⚖️', title: 'Weight Record', desc: 'Mark post-gym weight', type: 'weight' },
-    { id: 'th6', time: '10:30 PM', icon: '🌙', title: 'Night Peel', desc: 'Glyco-6 + Pond\'s Gel' }
+  thu: { emoji: '🌱', tag: 'Thursday · Growth', gym: 'push', items: [
+    { id: 'th1', time: '06:00 AM', icon: '🏃', title: 'Morning Cardio', desc: '20-Min Jog + Cooking' },
+    { id: 'th2', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Post-Bath Selection: Himalaya Wash -> Niacinamide -> Pond\'s -> SPF' },
+    { id: 'th3', time: '01:30 PM', icon: '🌤️', title: 'Office SPF Refresh', desc: 'Quick face wash + SPF' },
+    { id: 'th4', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym prep', desc: 'Himalaya Wash' },
+    { id: 'th5', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PUSH DAY (Volume)', type: 'gym' },
+    { id: 'th6', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Mark post-gym weight', type: 'weight' },
+    { id: 'th7', time: '10:30 PM', icon: '🌙', title: 'Night Peel', desc: 'Glyco-6 + Pond\'s Gel' }
   ]},
-  fri: { emoji: '💜', tag: 'Day 5 · Flow', gym: 'pull', items: [
+  fri: { emoji: '💜', tag: 'Friday · Flow', gym: 'pull', items: [
     { id: 'f1', time: '06:00 AM', icon: '🚶', title: 'Long Walk', desc: '45-Min Brisk Walk' },
-    { id: 'f2', time: '08:00 AM', icon: '🧴', title: 'Morning Glow', desc: 'Himalaya Wash + Minimalist Niacinamide + Ponds + SPF' },
-    { id: 'f3', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PULL DAY (Strength Focus)', type: 'gym' },
-    { id: 'f4', time: '09:15 PM', icon: '⚖️', title: 'Weight Record', desc: 'Mark post-gym weight', type: 'weight' },
-    { id: 'f5', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Pond\'s Super Light Gel' }
+    { id: 'f2', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Post-Bath Selection: Himalaya Wash -> Niacinamide -> Pond\'s -> SPF' },
+    { id: 'f3', time: '01:30 PM', icon: '🌤️', title: 'Office Refresh', desc: 'Stay fresh before office exit' },
+    { id: 'f4', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym Wash', desc: 'Himalaya Face Wash' },
+    { id: 'f5', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'PULL DAY (Strength Focus)', type: 'gym' },
+    { id: 'f6', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Final workday weight record', type: 'weight' },
+    { id: 'f7', time: '10:30 PM', icon: '🌙', title: 'Night Recovery', desc: 'Pond\'s Super Light Gel' }
   ]},
-  sat: { emoji: '🌺', tag: 'Day 6 · Peak', gym: 'legs', items: [
-    { id: 's1', time: '06:00 AM', icon: '🏃', title: 'Weekend Run', desc: '40-Min Elevation Run' },
-    { id: 's2', time: '08:00 AM', icon: '🧴', title: 'Morning Glow', desc: 'Himalaya Wash + Minimalist Niacinamide + Ponds + SPF' },
-    { id: 's3', time: '09:30 AM', icon: '🚿', title: 'Hair Rescue', desc: 'Tugain 2% Keto Shampoo' },
-    { id: 's4', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'LEGS DAY (Full Destroyer)', type: 'gym' },
-    { id: 's5', time: '09:15 PM', icon: '⚖️', title: 'Weight Record', desc: 'Mark post-gym weight', type: 'weight' },
-    { id: 's6', time: '10:30 PM', icon: '🌅', title: 'Weekend Reset', desc: 'Glyco-6 + Deep Moisturizer' }
+  sat: { emoji: '🌺', tag: 'Saturday · Peak', gym: 'legs', items: [
+    { id: 's1', time: '06:00 AM', icon: '🏃', title: 'Weekend Run', desc: 'Elevation focus + Cooking' },
+    { id: 's2', time: '10:00 AM', icon: '🚿', title: 'Hair Rescue', desc: 'Tugain 2% Shampoo' },
+    { id: 's3', time: '10:30 AM', icon: '🧴', title: 'Prime Skincare', desc: 'Full Morning Glow Protocol' },
+    { id: 's4', time: '06:30 PM', icon: '🧼', title: 'Pre-Gym Cleanse', desc: 'Wash off the weekend humidity' },
+    { id: 's5', time: '07:00 PM', icon: '🏋️', title: 'GYM SESSION', desc: 'LEGS DAY (Maximum Effort)', type: 'gym' },
+    { id: 's6', time: '09:15 PM', icon: '⚖️', title: 'Weight & Bath', desc: 'Mark live weight record', type: 'weight' },
+    { id: 's7', time: '10:30 PM', icon: '🌅', title: 'Weekend Reset', desc: 'Glyco-6 + Deep Moisturizer' }
   ]},
-  sun: { emoji: '🌻', tag: 'Day 7 · Soul', gym: null, items: [
-    { id: 'su1', time: '07:00 AM', icon: '🚶', title: 'Mindful Walk', desc: 'Long Nature Walk' },
-    { id: 'su2', time: '09:30 AM', icon: '🥥', title: 'Deep Oil', desc: 'Long Scalp Treatment' },
-    { id: 'su3', time: '08:00 PM', icon: '📝', title: 'WEEKEND EXIT', desc: 'Reflection + Set Next Week Goals' },
-    { id: 'su4', time: '09:15 PM', icon: '⚖️', title: 'Final Weekly Weight', desc: 'Record end-of-week weight', type: 'weight' }
+  sun: { emoji: '🌻', tag: 'Sunday · Soul', gym: null, items: [
+    { id: 'su1', time: '07:00 AM', icon: '🚶', title: 'Nature Walk', desc: 'Outdoor active recovery' },
+    { id: 'su2', time: '10:30 AM', icon: '🧴', title: 'Deep Recovery', desc: 'Detailed Skincare + Scalp Oil' },
+    { id: 'su3', time: '08:00 PM', icon: '📝', title: 'WEEKEND EXIT', desc: 'Review weekly progress + Prep next session' },
+    { id: 'su4', time: '09:15 PM', icon: '⚖️', title: 'Weight Check', desc: 'Week-end live weight record', type: 'weight' }
   ]}
 };
 
