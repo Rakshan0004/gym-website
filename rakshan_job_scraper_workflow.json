@@ -1,0 +1,771 @@
+﻿{
+  "name": "🇮🇳 India Job Hunt Automation — Full Auto Apply",
+  "active": false,
+  "nodes": [
+    {
+      "id": "node_01",
+      "name": "⏰ Schedule Trigger (Mon-Fri 9AM IST)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 3 * * 1-5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_02",
+      "name": "⚙️ CLIENT CONFIG — Edit This Node Only",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [340, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pref_01",
+              "name": "jobTitle",
+              "value": "Software Engineer",
+              "type": "string"
+            },
+            {
+              "id": "pref_02",
+              "name": "skills",
+              "value": "React, Node.js, Python, TypeScript",
+              "type": "string"
+            },
+            {
+              "id": "pref_03",
+              "name": "location",
+              "value": "Hyderabad",
+              "type": "string"
+            },
+            {
+              "id": "pref_04",
+              "name": "experienceYears",
+              "value": "3",
+              "type": "string"
+            },
+            {
+              "id": "pref_05",
+              "name": "salaryMinLPA",
+              "value": "8",
+              "type": "string"
+            },
+            {
+              "id": "pref_06",
+              "name": "jobType",
+              "value": "Full-time",
+              "type": "string"
+            },
+            {
+              "id": "pref_07",
+              "name": "workMode",
+              "value": "Remote or Hybrid",
+              "type": "string"
+            },
+            {
+              "id": "pref_08",
+              "name": "relevanceThreshold",
+              "value": "7",
+              "type": "string"
+            },
+            {
+              "id": "pref_09",
+              "name": "companiesBlacklist",
+              "value": "TCS, Infosys, Wipro, HCL, Tech Mahindra, Cognizant",
+              "type": "string"
+            },
+            {
+              "id": "pref_10",
+              "name": "yourName",
+              "value": "Client Full Name",
+              "type": "string"
+            },
+            {
+              "id": "pref_11",
+              "name": "yourEmail",
+              "value": "client@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "pref_12",
+              "name": "yourPhone",
+              "value": "+91-9999999999",
+              "type": "string"
+            },
+            {
+              "id": "pref_13",
+              "name": "linkedinEmail",
+              "value": "client.linkedin@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "pref_14",
+              "name": "linkedinPassword",
+              "value": "CLIENT_LINKEDIN_PASSWORD",
+              "type": "string"
+            },
+            {
+              "id": "pref_15",
+              "name": "summaryRecipientEmail",
+              "value": "client@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "pref_16",
+              "name": "googleSheetId",
+              "value": "PASTE_GOOGLE_SHEET_ID_HERE",
+              "type": "string"
+            },
+            {
+              "id": "pref_17",
+              "name": "openAIApiKey",
+              "value": "sk-PASTE_OPENAI_KEY_HERE",
+              "type": "string"
+            },
+            {
+              "id": "pref_18",
+              "name": "rapidApiKey",
+              "value": "PASTE_RAPIDAPI_KEY_HERE",
+              "type": "string"
+            },
+            {
+              "id": "pref_19",
+              "name": "apifyApiKey",
+              "value": "PASTE_APIFY_API_KEY_HERE",
+              "type": "string"
+            },
+            {
+              "id": "pref_20",
+              "name": "resumeText",
+              "value": "PASTE FULL RESUME TEXT HERE — Name, Contact, LinkedIn, Summary, Skills, Work Experience with achievements, Projects, Education, Certifications. More detail = better cover letters.",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node_03",
+      "name": "🔍 Fetch Jobs — JSearch API (LinkedIn + Indeed + Naukri + Glassdoor)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [580, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsearch.p.rapidapi.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-RapidAPI-Key",
+              "value": "={{ $json.rapidApiKey }}"
+            },
+            {
+              "name": "X-RapidAPI-Host",
+              "value": "jsearch.p.rapidapi.com"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.jobTitle + ' ' + $json.skills.split(',')[0].trim() + ' in ' + $json.location + ' India' }}"
+            },
+            {
+              "name": "page",
+              "value": "1"
+            },
+            {
+              "name": "num_pages",
+              "value": "5"
+            },
+            {
+              "name": "date_posted",
+              "value": "today"
+            },
+            {
+              "name": "country",
+              "value": "IN"
+            },
+            {
+              "name": "employment_types",
+              "value": "FULLTIME,CONTRACTOR,PARTTIME"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_04",
+      "name": "📊 Parse & Normalize Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [820, 300],
+      "parameters": {
+        "jsCode": "const prefs = $('⚙️ CLIENT CONFIG — Edit This Node Only').first().json;\nconst rawData = $input.first().json;\nconst jobs = rawData.data || [];\n\nif (jobs.length === 0) {\n  return [{ json: { _noJobs: true, ...prefs } }];\n}\n\nconst normalizedJobs = jobs.map(job => ({\n  jobId: job.job_id || '',\n  title: job.job_title || '',\n  company: job.employer_name || '',\n  location: [job.job_city, job.job_state, 'India'].filter(Boolean).join(', '),\n  description: (job.job_description || '').substring(0, 2500),\n  salary: job.job_min_salary\n    ? `₹${Math.round((job.job_min_salary || 0) / 100000)}L - ₹${Math.round((job.job_max_salary || 0) / 100000)}L`\n    : 'Not Specified',\n  jobType: job.job_employment_type || 'FULLTIME',\n  isRemote: job.job_is_remote || false,\n  postedAt: job.job_posted_at_datetime_utc || new Date().toISOString(),\n  applyUrl: job.job_apply_link || '',\n  isLinkedIn: (job.job_apply_link || '').includes('linkedin.com') || (job.job_publisher || '').toLowerCase().includes('linkedin'),\n  source: job.job_publisher || 'JSearch',\n  requiredSkills: (job.job_required_skills || []).join(', '),\n  requiredExperience: job.job_required_experience?.required_experience_in_months\n    ? Math.round(job.job_required_experience.required_experience_in_months / 12) + ' years'\n    : 'Not specified',\n\n  // Carry all prefs through\n  pJobTitle: prefs.jobTitle,\n  pSkills: prefs.skills,\n  pLocation: prefs.location,\n  pExperienceYears: prefs.experienceYears,\n  pSalaryMinLPA: prefs.salaryMinLPA,\n  pWorkMode: prefs.workMode,\n  pRelevanceThreshold: parseFloat(prefs.relevanceThreshold || '7'),\n  pCompaniesBlacklist: prefs.companiesBlacklist,\n  pYourName: prefs.yourName,\n  pYourEmail: prefs.yourEmail,\n  pYourPhone: prefs.yourPhone,\n  pLinkedinEmail: prefs.linkedinEmail,\n  pLinkedinPassword: prefs.linkedinPassword,\n  pSummaryRecipientEmail: prefs.summaryRecipientEmail,\n  pGoogleSheetId: prefs.googleSheetId,\n  pOpenAIApiKey: prefs.openAIApiKey,\n  pApifyApiKey: prefs.apifyApiKey,\n  pResumeText: prefs.resumeText\n}));\n\nreturn normalizedJobs.map(j => ({ json: j }));"
+      }
+    },
+    {
+      "id": "node_05",
+      "name": "🔄 Loop Over Jobs (1 at a time)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1060, 300],
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      }
+    },
+    {
+      "id": "node_06",
+      "name": "🏗️ Build AI Relevance Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 180],
+      "parameters": {
+        "jsCode": "const job = $json;\n\nconst systemPrompt = `You are a job relevance scoring expert for the Indian tech job market. Score strictly — most jobs should score 5-7. Only genuinely excellent matches score 9-10. Respond ONLY with valid JSON (no markdown, no explanation):\n{\"score\": <integer 1-10>, \"reason\": \"<max 25 words>\", \"isBlacklisted\": <true|false>, \"keyMatch\": \"<top matching skill>\", \"topConcern\": \"<main gap or concern>\"}`;\n\nconst userPrompt = `CANDIDATE PROFILE:\nTarget Role: ${job.pJobTitle}\nSkills: ${job.pSkills}\nExperience: ${job.pExperienceYears} years\nPreferred Location: ${job.pLocation}\nMin Salary: ${job.pSalaryMinLPA} LPA\nWork Mode: ${job.pWorkMode}\nBlacklisted Companies: ${job.pCompaniesBlacklist}\n\nJOB:\nTitle: ${job.title}\nCompany: ${job.company}\nLocation: ${job.location}\nSalary: ${job.salary}\nType: ${job.jobType} | Remote: ${job.isRemote}\nRequired Skills: ${job.requiredSkills}\nRequired Exp: ${job.requiredExperience}\nDescription:\n${job.description.substring(0, 1800)}`;\n\nreturn [{ json: { ...job, openAIPayload: JSON.stringify({\n  model: 'gpt-4o-mini',\n  max_tokens: 250,\n  temperature: 0.2,\n  messages: [\n    { role: 'system', content: systemPrompt },\n    { role: 'user', content: userPrompt }\n  ]\n}) } }];"
+      }
+    },
+    {
+      "id": "node_07",
+      "name": "🤖 AI Score Job (OpenAI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 180],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.pOpenAIApiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "rawBody",
+        "rawBody": "={{ $json.openAIPayload }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_08",
+      "name": "📝 Parse Relevance Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 180],
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json;\nconst jobData = $('🏗️ Build AI Relevance Payload').first().json;\n\nlet score = 5, reason = 'Parse error', isBlacklisted = false, keyMatch = '', topConcern = '';\n\ntry {\n  const raw = aiResponse.choices?.[0]?.message?.content || '{}';\n  const cleaned = raw.replace(/```json|```/g, '').trim();\n  const parsed = JSON.parse(cleaned);\n  score = parseInt(parsed.score) || 5;\n  reason = parsed.reason || 'N/A';\n  isBlacklisted = parsed.isBlacklisted === true;\n  keyMatch = parsed.keyMatch || '';\n  topConcern = parsed.topConcern || '';\n} catch(e) {}\n\nreturn [{\n  json: {\n    ...jobData,\n    relevanceScore: score,\n    relevanceReason: reason,\n    isBlacklisted,\n    keyMatch,\n    topConcern\n  }\n}];"
+      }
+    },
+    {
+      "id": "node_09",
+      "name": "✅ Is Relevant & Not Blacklisted?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2020, 180],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond_score",
+              "leftValue": "={{ $json.relevanceScore }}",
+              "rightValue": "={{ $json.pRelevanceThreshold }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "cond_blacklist",
+              "leftValue": "={{ $json.isBlacklisted }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "cond_nojobs",
+              "leftValue": "={{ $json._noJobs }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node_10",
+      "name": "📋 Check Sheets — Duplicate?",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [2260, 80],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.pGoogleSheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs Tracker",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Job ID",
+              "lookupValue": "={{ $json.jobId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google_sheets_credential",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "id": "node_11",
+      "name": "🆕 Is This a New Job?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2500, 80],
+      "parameters": {
+        "jsCode": "const sheetsRows = $input.all();\nconst jobData = $('📝 Parse Relevance Score').first().json;\n\nconst firstRow = sheetsRows[0]?.json;\nconst alreadyExists = firstRow && firstRow['Job ID'] && firstRow['Job ID'].toString().trim() !== '';\n\nreturn [{ json: { ...jobData, isNewJob: !alreadyExists } }];"
+      }
+    },
+    {
+      "id": "node_12",
+      "name": "🔀 New Job Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2740, 80],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond_new",
+              "leftValue": "={{ $json.isNewJob }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node_13",
+      "name": "✍️ Build Cover Letter AI Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2980, -20],
+      "parameters": {
+        "jsCode": "const job = $json;\n\nconst systemPrompt = `You are an expert career coach for the Indian tech job market. Write a punchy, tailored cover letter in exactly 220-240 words. Rules:\n- First line must mention the specific company and role\n- Highlight 2-3 specific matching skills with brief proof\n- One line showing you know the company (their product/industry)\n- Close with a confident call to action\n- No clichés: 'I am excited', 'passion for', 'team player'\n- Output ONLY the cover letter text. No subject, no greeting line header.`;\n\nconst userPrompt = `JOB: ${job.title} at ${job.company} (${job.location})\nKEY MATCH SKILL: ${job.keyMatch}\nJOB DESCRIPTION: ${job.description.substring(0, 2000)}\n\nCANDIDATE RESUME:\n${job.pResumeText}\n\nName: ${job.pYourName} | Email: ${job.pYourEmail} | Phone: ${job.pYourPhone}`;\n\nreturn [{ json: { ...job, coverLetterPayload: JSON.stringify({\n  model: 'gpt-4o-mini',\n  max_tokens: 600,\n  temperature: 0.75,\n  messages: [\n    { role: 'system', content: systemPrompt },\n    { role: 'user', content: userPrompt }\n  ]\n}) } }];"
+      }
+    },
+    {
+      "id": "node_14",
+      "name": "🤖 AI Generate Cover Letter (OpenAI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, -20],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.pOpenAIApiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "rawBody",
+        "rawBody": "={{ $json.coverLetterPayload }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_15",
+      "name": "📦 Merge Job + Cover Letter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3460, -20],
+      "parameters": {
+        "jsCode": "const aiResp = $input.first().json;\nconst jobData = $('✍️ Build Cover Letter AI Payload').first().json;\n\nlet coverLetter = 'Generation failed — please write manually.';\ntry {\n  coverLetter = aiResp.choices?.[0]?.message?.content?.trim() || coverLetter;\n} catch(e) {}\n\nconst now = new Date();\nconst dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });\nconst timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });\n\nreturn [{\n  json: {\n    ...jobData,\n    coverLetter,\n    savedAt: `${dateStr} ${timeStr}`,\n    sheetRow: {\n      'Job ID': jobData.jobId,\n      'Title': jobData.title,\n      'Company': jobData.company,\n      'Location': jobData.location,\n      'Salary': jobData.salary,\n      'Remote': jobData.isRemote ? 'Yes' : 'No',\n      'Source': jobData.source,\n      'Is LinkedIn': jobData.isLinkedIn ? 'Yes' : 'No',\n      'Apply URL': jobData.applyUrl,\n      'Posted At': jobData.postedAt ? new Date(jobData.postedAt).toLocaleDateString('en-IN') : '',\n      'AI Score': jobData.relevanceScore,\n      'AI Reason': jobData.relevanceReason,\n      'Key Match': jobData.keyMatch,\n      'Top Concern': jobData.topConcern,\n      'Status': 'Saved — Pending Apply',\n      'Cover Letter': coverLetter,\n      'Applied At': '',\n      'Interview Date': '',\n      'Offer': '',\n      'Notes': '',\n      'Saved At': `${dateStr} ${timeStr}`\n    }\n  }\n}];"
+      }
+    },
+    {
+      "id": "node_16",
+      "name": "💾 Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [3700, -20],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.pGoogleSheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job ID": "={{ $json.sheetRow['Job ID'] }}",
+            "Title": "={{ $json.sheetRow['Title'] }}",
+            "Company": "={{ $json.sheetRow['Company'] }}",
+            "Location": "={{ $json.sheetRow['Location'] }}",
+            "Salary": "={{ $json.sheetRow['Salary'] }}",
+            "Remote": "={{ $json.sheetRow['Remote'] }}",
+            "Source": "={{ $json.sheetRow['Source'] }}",
+            "Is LinkedIn": "={{ $json.sheetRow['Is LinkedIn'] }}",
+            "Apply URL": "={{ $json.sheetRow['Apply URL'] }}",
+            "Posted At": "={{ $json.sheetRow['Posted At'] }}",
+            "AI Score": "={{ $json.sheetRow['AI Score'] }}",
+            "AI Reason": "={{ $json.sheetRow['AI Reason'] }}",
+            "Key Match": "={{ $json.sheetRow['Key Match'] }}",
+            "Top Concern": "={{ $json.sheetRow['Top Concern'] }}",
+            "Status": "={{ $json.sheetRow['Status'] }}",
+            "Cover Letter": "={{ $json.sheetRow['Cover Letter'] }}",
+            "Applied At": "",
+            "Interview Date": "",
+            "Offer": "",
+            "Notes": "",
+            "Saved At": "={{ $json.sheetRow['Saved At'] }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google_sheets_credential",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "id": "node_17",
+      "name": "🔀 Is It a LinkedIn Job?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [3940, -20],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond_linkedin",
+              "leftValue": "={{ $json.isLinkedIn }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node_18",
+      "name": "🚀 APIFY — LinkedIn Easy Apply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4180, -120],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/bebity~linkedin-jobs-scraper/runs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.pApifyApiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "rawBody",
+        "rawBody": "={{ JSON.stringify({ jobUrl: $json.applyUrl, linkedinEmail: $json.pLinkedinEmail, linkedinPassword: $json.pLinkedinPassword, coverLetter: $json.coverLetter, firstName: $json.pYourName.split(' ')[0], lastName: $json.pYourName.split(' ').slice(1).join(' '), email: $json.pYourEmail, phone: $json.pYourPhone, resumeText: $json.pResumeText.substring(0, 1500) }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node_19",
+      "name": "✅ Update Status — Applied via LinkedIn",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [4420, -120],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('📦 Merge Job + Cover Letter').first().json.pGoogleSheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job ID": "={{ $('📦 Merge Job + Cover Letter').first().json.jobId }}",
+            "Status": "Applied — LinkedIn Auto",
+            "Applied At": "={{ new Date().toLocaleDateString('en-IN') }}"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google_sheets_credential",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "id": "node_20",
+      "name": "📌 Update Status — Manual Apply Needed",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [4180, 80],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.pGoogleSheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Jobs Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job ID": "={{ $json.jobId }}",
+            "Status": "⚠️ Manual Apply Needed",
+            "Notes": "Non-LinkedIn job — open Apply URL and use cover letter from this sheet"
+          }
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google_sheets_credential",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "id": "node_21",
+      "name": "⏭️ Skip — Not Relevant",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2260, 380],
+      "parameters": {}
+    },
+    {
+      "id": "node_22",
+      "name": "⏭️ Skip — Already Saved",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2980, 180],
+      "parameters": {}
+    },
+    {
+      "id": "node_23",
+      "name": "📧 Daily Summary Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1300, 500],
+      "parameters": {
+        "operation": "send",
+        "sendTo": "={{ $('⚙️ CLIENT CONFIG — Edit This Node Only').first().json.summaryRecipientEmail }}",
+        "subject": "🤖 Job Hunt Report — {{ new Date().toLocaleDateString('en-IN', {weekday:'long', day:'2-digit', month:'long'}) }}",
+        "emailType": "html",
+        "message": "<div style='font-family:Arial,sans-serif;max-width:620px;margin:auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden'><div style='background:linear-gradient(135deg,#1e3a8a,#3b82f6);padding:28px 32px'><h1 style='color:#fff;margin:0;font-size:22px'>🇮🇳 Your Daily Job Hunt Report</h1><p style='color:#bfdbfe;margin:6px 0 0'>Automated by n8n — {{ new Date().toLocaleDateString(\"en-IN\",{weekday:\"long\",day:\"2-digit\",month:\"long\",year:\"numeric\"}) }}</p></div><div style='padding:28px 32px'><table style='width:100%;border-collapse:collapse'><tr><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:15px'>🔍 <strong>Sources searched</strong></td><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;color:#374151'>LinkedIn · Indeed · Naukri · Glassdoor</td></tr><tr><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:15px'>🤖 <strong>AI Filtering</strong></td><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;color:#374151'>GPT-4o-mini scored each job for your profile</td></tr><tr><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:15px'>✍️ <strong>Cover Letters</strong></td><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;color:#374151'>Generated for every new relevant job</td></tr><tr><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:15px'>🚀 <strong>Auto-Applied</strong></td><td style='padding:10px 0;border-bottom:1px solid #f3f4f6;color:#374151'>LinkedIn Easy Apply submitted via Apify</td></tr><tr><td style='padding:10px 0;font-size:15px'>⚠️ <strong>Manual Apply</strong></td><td style='padding:10px 0;color:#374151'>Non-LinkedIn jobs flagged in your tracker</td></tr></table><div style='margin-top:28px;text-align:center'><a href='https://docs.google.com/spreadsheets/d/{{ $(\\'⚙️ CLIENT CONFIG — Edit This Node Only\\').first().json.googleSheetId }}' style='display:inline-block;background:#1e3a8a;color:#ffffff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px'>📊 Open My Jobs Tracker</a></div><p style='color:#9ca3af;font-size:12px;text-align:center;margin-top:24px'>Update job statuses as you progress through interviews · This report runs every weekday at 9AM IST</p></div></div>",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail_credential",
+          "name": "Gmail"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "⏰ Schedule Trigger (Mon-Fri 9AM IST)": {
+      "main": [[{ "node": "⚙️ CLIENT CONFIG — Edit This Node Only", "type": "main", "index": 0 }]]
+    },
+    "⚙️ CLIENT CONFIG — Edit This Node Only": {
+      "main": [[{ "node": "🔍 Fetch Jobs — JSearch API (LinkedIn + Indeed + Naukri + Glassdoor)", "type": "main", "index": 0 }]]
+    },
+    "🔍 Fetch Jobs — JSearch API (LinkedIn + Indeed + Naukri + Glassdoor)": {
+      "main": [[{ "node": "📊 Parse & Normalize Jobs", "type": "main", "index": 0 }]]
+    },
+    "📊 Parse & Normalize Jobs": {
+      "main": [[{ "node": "🔄 Loop Over Jobs (1 at a time)", "type": "main", "index": 0 }]]
+    },
+    "🔄 Loop Over Jobs (1 at a time)": {
+      "main": [
+        [{ "node": "🏗️ Build AI Relevance Payload", "type": "main", "index": 0 }],
+        [{ "node": "📧 Daily Summary Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "🏗️ Build AI Relevance Payload": {
+      "main": [[{ "node": "🤖 AI Score Job (OpenAI)", "type": "main", "index": 0 }]]
+    },
+    "🤖 AI Score Job (OpenAI)": {
+      "main": [[{ "node": "📝 Parse Relevance Score", "type": "main", "index": 0 }]]
+    },
+    "📝 Parse Relevance Score": {
+      "main": [[{ "node": "✅ Is Relevant & Not Blacklisted?", "type": "main", "index": 0 }]]
+    },
+    "✅ Is Relevant & Not Blacklisted?": {
+      "main": [
+        [{ "node": "📋 Check Sheets — Duplicate?", "type": "main", "index": 0 }],
+        [{ "node": "⏭️ Skip — Not Relevant", "type": "main", "index": 0 }]
+      ]
+    },
+    "📋 Check Sheets — Duplicate?": {
+      "main": [[{ "node": "🆕 Is This a New Job?", "type": "main", "index": 0 }]]
+    },
+    "🆕 Is This a New Job?": {
+      "main": [[{ "node": "🔀 New Job Gate", "type": "main", "index": 0 }]]
+    },
+    "🔀 New Job Gate": {
+      "main": [
+        [{ "node": "✍️ Build Cover Letter AI Payload", "type": "main", "index": 0 }],
+        [{ "node": "⏭️ Skip — Already Saved", "type": "main", "index": 0 }]
+      ]
+    },
+    "✍️ Build Cover Letter AI Payload": {
+      "main": [[{ "node": "🤖 AI Generate Cover Letter (OpenAI)", "type": "main", "index": 0 }]]
+    },
+    "🤖 AI Generate Cover Letter (OpenAI)": {
+      "main": [[{ "node": "📦 Merge Job + Cover Letter", "type": "main", "index": 0 }]]
+    },
+    "📦 Merge Job + Cover Letter": {
+      "main": [[{ "node": "💾 Save to Google Sheets", "type": "main", "index": 0 }]]
+    },
+    "💾 Save to Google Sheets": {
+      "main": [[{ "node": "🔀 Is It a LinkedIn Job?", "type": "main", "index": 0 }]]
+    },
+    "🔀 Is It a LinkedIn Job?": {
+      "main": [
+        [{ "node": "🚀 APIFY — LinkedIn Easy Apply", "type": "main", "index": 0 }],
+        [{ "node": "📌 Update Status — Manual Apply Needed", "type": "main", "index": 0 }]
+      ]
+    },
+    "🚀 APIFY — LinkedIn Easy Apply": {
+      "main": [[{ "node": "✅ Update Status — Applied via LinkedIn", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "last"
+  },
+  "staticData": null,
+  "tags": [
+    { "name": "Job Hunt" },
+    { "name": "India" },
+    { "name": "Apify" },
+    { "name": "Client" }
+  ],
+  "versionId": "2.0.0"
+}
